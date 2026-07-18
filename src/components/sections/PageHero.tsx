@@ -10,7 +10,7 @@ interface PageHeroProps {
 export default function PageHero({ title, description, currentPage }: PageHeroProps) {
   return (
     <section
-      className="py-20 md:py-28"
+      className="py-28 md:py-28"
       style={{
         background:
           "radial-gradient(ellipse at top right, rgba(16,185,129,0.08) 0%, transparent 50%), radial-gradient(ellipse at bottom left, rgba(245,158,11,0.05) 0%, transparent 50%), #030712",

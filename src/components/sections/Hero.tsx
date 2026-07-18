@@ -34,7 +34,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative min-h-screen overflow-hidden flex flex-col items-center justify-center px-4 pt-20 pb-16">
+    <section className="relative min-h-screen overflow-hidden flex flex-col items-center justify-center px-4 pt-24 pb-16">
       {/* Slideshow background */}
       {SLIDES.map((src, index) => (
         <img

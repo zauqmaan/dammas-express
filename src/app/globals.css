@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #030712;
+  color: #f9fafb;
+}
+
+::selection {
+  background-color: #10b981;
+  color: #030712;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #030712;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(16, 185, 129, 0.25);
+  border-radius: 9999px;
+  border: 2px solid #030712;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(16, 185, 129, 0.45);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(16, 185, 129, 0.35) #030712;
+}
+
+/* Native date/time inputs default to dark-on-dark icons; force a light picker UI */
+input[type="date"],
+input[type="time"] {
+  color-scheme: dark;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+
+/* Rich Text Editor Dark Mode */
+.wysiwyg-editor { background-color: transparent !important; color: #d1d5db !important; font-size: 0.875rem; line-height: 1.6; }
+.wysiwyg-editor a { color: #10b981 !important; }
+.wysiwyg-editor h1, .wysiwyg-editor h2, .wysiwyg-editor h3 { color: white !important; font-weight: bold; }
+.wysiwyg-editor ul, .wysiwyg-editor ol { color: #9ca3af !important; padding-left: 1.5rem; }
+.wysiwyg-editor img { max-width: 100%; border-radius: 0.5rem; margin: 1rem 0; }

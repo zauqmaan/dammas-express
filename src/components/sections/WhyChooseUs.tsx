@@ -35,9 +35,9 @@ const FEATURES: {
     Icon: Clock,
     iconBg: "bg-amber-500/10",
     iconColor: "text-amber-500",
-    title: "24/7 Availability",
+    title: "Fixed Shift Timings",
     description:
-      "Rain or shine, 3 AM or 3 PM — our dispatch team is always ready. Book anytime, ride anywhere.",
+      "Convenient morning (7 to 10 AM) and evening (5 to 8 PM) shifts designed for regular office and factory commuters.",
   },
 ];
 

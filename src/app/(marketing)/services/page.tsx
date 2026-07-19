@@ -4,9 +4,9 @@ import PageHero from "@/components/sections/PageHero";
 import { getServices } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Our Services",
+  title: "Transport Services to Al Quoz",
   description:
-    "Daily car lift, monthly subscriptions, airport transfers, and corporate pick & drop services across Dubai and UAE.",
+    "Staff pick & drop, tours, and party pick & drop services to Al Quoz, Dubai.",
 };
 
 const iconMap: Record<string, LucideIcon> = {

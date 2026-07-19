@@ -5,9 +5,9 @@ import RouteCard from "@/components/ui/RouteCard";
 import { getRoutes } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Popular Routes & Pricing",
+  title: "Car Lift Routes to Al Quoz",
   description:
-    "Fixed pricing for popular Dubai routes. Transparent fares with no hidden charges.",
+    "Fixed monthly pricing for car lift routes from Deira, Rigga, Bur Dubai, Karama, and Sharaf DG to Al Quoz.",
 };
 
 const STEPS = [

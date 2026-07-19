@@ -97,7 +97,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <Clock size={16} className="text-emerald-500 shrink-0" />
-                <span className="text-sm text-gray-400">24/7 Available</span>
+                <span className="text-sm text-gray-400">Morning & Evening Shifts</span>
               </li>
             </ul>
           </div>

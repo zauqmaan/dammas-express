@@ -2,7 +2,7 @@ const STATS: { number: string; symbol: string; symbolColor: string; label: strin
   { number: "500", symbol: "+", symbolColor: "text-emerald-500", label: "Happy Customers" },
   { number: "50", symbol: "+", symbolColor: "text-emerald-500", label: "Fleet Vehicles" },
   { number: "5", symbol: "★", symbolColor: "text-amber-500", label: "Customer Rating" },
-  { number: "24", symbol: "/7", symbolColor: "text-emerald-500", label: "Service Available" },
+  { number: "8", symbol: "", symbolColor: "text-emerald-500", label: "Daily Shifts" },
 ];
 
 export default function StatsBar() {

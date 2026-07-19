@@ -41,7 +41,8 @@
       "Read(//d//**)",
       "Read(//tmp/**)",
       "Bash(npx --yes playwright screenshot --viewport-size=1400,1400 --wait-for-timeout=1500 \"http://localhost:3100/#contact\" contact.png)",
-      "Bash(npx --yes playwright install chromium)"
+      "Bash(npx --yes playwright install chromium)",
+      "Bash(git add *)"
     ]
   }
 }

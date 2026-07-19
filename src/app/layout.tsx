@@ -9,42 +9,27 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://dammas-express.com"), // Replace with actual domain later
+  metadataBase: new URL("https://dammas-express.com"),
   title: {
-    default: "DAMMAS EXPRESS | Professional Car Lift Services in Dubai",
-    template: "%s | DAMMAS EXPRESS",
+    default: "Al Quoz Car Lift Services | Dammas Express Dubai",
+    template: "%s | Dammas Express",
   },
   description:
-    "Reliable, safe, and affordable car lift services across Dubai and UAE. Daily rides, monthly subscriptions, airport transfers, and corporate transport. 24/7 available.",
+    "Affordable car lift services to Al Quoz from Deira, Bur Dubai, Karama, Rigga & Abuhail. Monthly passes for AED 250-300. Morning & Evening shifts available.",
   keywords: [
-    "car lift dubai",
-    "transportation services dubai",
-    "car lift uae",
-    "dubai to sharjah transport",
-    "monthly car lift subscription",
-    "airport transfer dubai",
-    "staff transport dubai",
-    "toyota hiace rental dubai",
+    "al quoz car lift",
+    "car lift to al quoz",
+    "deira to al quoz",
+    "bur dubai to al quoz",
+    "karama to al quoz transport",
+    "monthly car lift dubai",
+    "al quoz staff transport",
+    "dammas express",
   ],
-  authors: [{ name: "DAMMAS EXPRESS" }],
   openGraph: {
-    type: "website",
-    locale: "en_AE",
-    url: "https://dammas-express.com",
-    siteName: "DAMMAS EXPRESS",
-    title: "DAMMAS EXPRESS | Professional Car Lift Services in Dubai",
+    title: "Al Quoz Car Lift Services | Dammas Express",
     description:
-      "Reliable, safe, and affordable car lift services across Dubai and UAE. 24/7 available.",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "DAMMAS EXPRESS | Car Lift Services Dubai",
-    description:
-      "Reliable, safe, and affordable car lift services across Dubai and UAE.",
-  },
-  robots: {
-    index: true,
-    follow: true,
+      "Daily and monthly car lift services to Al Quoz. Starting from AED 250/month.",
   },
 };
 

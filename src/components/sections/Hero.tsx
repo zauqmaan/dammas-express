@@ -6,7 +6,7 @@ import { Calendar, ArrowRight, Shield, Clock, MapPin, ChevronDown } from "lucide
 
 const TRUST_ITEMS = [
   { Icon: Shield, label: "Fully Licensed & Insured" },
-  { Icon: Clock, label: "24/7 Available" },
+  { Icon: Clock, label: "Shifts: 7-10 AM & 5-8 PM" },
   { Icon: MapPin, label: "All Emirates Covered" },
 ];
 
@@ -57,7 +57,7 @@ export default function Hero() {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
           </span>
-          🇦🇪 Serving All Emirates
+          🇦🇪 Morning & Evening Shifts
         </span>
       </motion.div>
 
@@ -71,7 +71,7 @@ export default function Hero() {
         </span>{" "}
         Car Lift
         <br />
-        Services Across UAE
+        Services to Al Quoz
       </motion.h1>
 
       {/* Subheadline */}
@@ -79,7 +79,7 @@ export default function Hero() {
         {...fadeUp(0.3)}
         className="relative z-20 mt-6 max-w-2xl mx-auto text-lg md:text-xl text-gray-400 text-center leading-relaxed"
       >
-        Affordable, Safe, and Fast Transportation
+        Affordable daily and monthly rides from Deira, Bur Dubai, and Karama to Al Quoz.
       </motion.p>
 
       {/* CTA Buttons */}

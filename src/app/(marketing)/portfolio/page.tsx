@@ -17,7 +17,7 @@ const TRUST_BAR = [
 ];
 
 function bookingUrl(vehicle: string) {
-  const message = `Hi, I want to book a ${vehicle}`;
+  const message = `Hi, I want to get a quote for a ${vehicle}`;
   return `https://wa.me/971566625302?text=${encodeURIComponent(message)}`;
 }
 
@@ -52,21 +52,13 @@ export default async function PortfolioPage() {
                     {vehicle.description}
                   </p>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
                     <div className="bg-[#0F172A] border border-white/5 rounded-lg p-4">
                       <p className="text-xs text-gray-500 uppercase tracking-wide">
                         Passengers
                       </p>
                       <p className="text-white font-semibold mt-1">
                         {vehicle.passengers}
-                      </p>
-                    </div>
-                    <div className="bg-[#0F172A] border border-white/5 rounded-lg p-4">
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">
-                        Daily Rate
-                      </p>
-                      <p className="text-white font-semibold mt-1">
-                        {vehicle.price_range}
                       </p>
                     </div>
                     <div className="bg-[#0F172A] border border-white/5 rounded-lg p-4">
@@ -96,7 +88,7 @@ export default async function PortfolioPage() {
                     rel="noopener noreferrer"
                     className="mt-8 inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg font-medium text-sm transition-all"
                   >
-                    Book {vehicle.name}
+                    Contact for Pricing
                   </a>
                 </div>
 

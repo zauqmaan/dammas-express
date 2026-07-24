@@ -234,18 +234,6 @@ export default function FleetPage() {
               </div>
 
               <div>
-                <label className="block text-gray-400 text-sm mb-1.5">Price Range</label>
-                <input
-                  type="text"
-                  value={form.price_range}
-                  onChange={(e) => setForm((prev) => ({ ...prev, price_range: e.target.value }))}
-                  required
-                  placeholder="e.g., AED 150 - 300"
-                  className="w-full bg-[#030712] border border-white/5 rounded-lg px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50"
-                />
-              </div>
-
-              <div>
                 <label className="block text-gray-400 text-sm mb-1.5">Passengers</label>
                 <input
                   type="text"

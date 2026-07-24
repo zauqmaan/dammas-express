@@ -1,8 +1,8 @@
-import { MapPin, ArrowRight, Clock } from "lucide-react";
+import { MapPin, ArrowRight, Clock, Check } from "lucide-react";
 import type { Route } from "@/lib/supabase/types";
 
-function bookingUrl(from: string, to: string) {
-  const message = `Hi, I want to book a ride from ${from} to ${to}`;
+function bookingUrl(from: string) {
+  const message = `Hi, I want to book a monthly pass from ${from} to Al Quoz`;
   return `https://wa.me/971566625302?text=${encodeURIComponent(message)}`;
 }
 
@@ -11,7 +11,6 @@ export default function RouteCard({
   to_location,
   duration,
   price_one_way,
-  price_return,
 }: Route) {
   return (
     <div className="bg-[#0F172A] border border-white/5 rounded-xl p-6 hover:border-emerald-500/20 transition-all duration-300">
@@ -36,19 +35,19 @@ export default function RouteCard({
         </div>
       </div>
 
-      <div className="mt-5 pt-5 border-t border-white/5 grid grid-cols-2 gap-4">
-        <div>
-          <p className="text-xs text-gray-500 uppercase tracking-wide">One Way</p>
-          <p className="text-white font-bold text-xl mt-1">{price_one_way}</p>
-        </div>
-        <div>
-          <p className="text-xs text-gray-500 uppercase tracking-wide">Return</p>
-          <p className="text-emerald-400 font-bold text-xl mt-1">{price_return}</p>
+      <div className="mt-5 pt-5 border-t border-white/5">
+        <p className="text-xs text-gray-500 uppercase tracking-wide">Monthly Pass</p>
+        <p className="text-white font-bold text-2xl mt-1">{price_one_way}</p>
+        <div className="flex items-center gap-1.5 mt-2">
+          <Check size={12} className="text-emerald-500/70" />
+          <span className="text-gray-500 text-xs">
+            Includes morning & evening shifts
+          </span>
         </div>
       </div>
 
       <a
-        href={bookingUrl(from_location, to_location)}
+        href={bookingUrl(from_location)}
         target="_blank"
         rel="noopener noreferrer"
         className="mt-5 w-full text-center block bg-white/5 hover:bg-emerald-500/10 border border-white/5 hover:border-emerald-500/20 text-white text-sm font-medium py-2.5 rounded-lg transition-all duration-300"

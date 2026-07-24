@@ -6,7 +6,7 @@ interface FleetGalleryProps {
 }
 
 function bookingUrl(vehicle: string) {
-  const message = `Hi, I want to book a ${vehicle} for my transportation needs`;
+  const message = `Hi, I want to get a quote for a ${vehicle}`;
   return `https://wa.me/971566625302?text=${encodeURIComponent(message)}`;
 }
 
@@ -46,12 +46,6 @@ export default function FleetGallery({ data }: FleetGalleryProps) {
 
               <div className="p-6">
                 <h3 className="text-white font-bold text-xl">{vehicle.name}</h3>
-                <div className="mt-2 flex items-baseline gap-1">
-                  <span className="text-emerald-400 font-bold text-2xl">
-                    {vehicle.price_range}
-                  </span>
-                  <span className="text-gray-500 text-sm">/day</span>
-                </div>
                 <p className="text-gray-400 text-sm leading-relaxed mt-3">
                   {vehicle.description}
                 </p>
@@ -91,7 +85,7 @@ export default function FleetGallery({ data }: FleetGalleryProps) {
                     rel="noopener noreferrer"
                     className="block w-full text-center py-3 rounded-lg bg-emerald-500/10 hover:bg-emerald-500 text-emerald-400 hover:text-white font-medium text-sm transition-all duration-300"
                   >
-                    Book {vehicle.name}
+                    Contact for Pricing
                   </a>
                 </div>
               </div>

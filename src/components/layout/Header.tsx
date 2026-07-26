@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
 const NAV_LINKS = [
@@ -13,8 +14,12 @@ const NAV_LINKS = [
 ];
 
 export default function Header() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -47,7 +52,11 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm text-gray-400 hover:text-white transition-colors"
+                className={`text-sm transition-colors ${
+                  isActive(link.href)
+                    ? "font-bold text-white"
+                    : "text-gray-400 hover:text-white"
+                }`}
               >
                 {link.label}
               </Link>
@@ -106,7 +115,11 @@ export default function Header() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className="text-base text-gray-400 hover:text-white transition-colors"
+                className={`text-base transition-colors ${
+                  isActive(link.href)
+                    ? "font-bold text-white"
+                    : "text-gray-400 hover:text-white"
+                }`}
               >
                 {link.label}
               </Link>

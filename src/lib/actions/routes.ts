@@ -2,8 +2,11 @@
 
 import { revalidatePath } from 'next/cache'
 import { adminSupabase } from '@/lib/supabase/admin'
+import { requireSession } from '@/lib/auth'
 
 export async function addRoute(formData: FormData) {
+  await requireSession()
+
   const from_location = formData.get('from_location') as string
   const to_location = formData.get('to_location') as string
   const duration = formData.get('duration') as string
@@ -16,6 +19,8 @@ export async function addRoute(formData: FormData) {
 }
 
 export async function updateRoute(id: string, formData: FormData) {
+  await requireSession()
+
   const from_location = formData.get('from_location') as string
   const to_location = formData.get('to_location') as string
   const duration = formData.get('duration') as string
@@ -28,6 +33,7 @@ export async function updateRoute(id: string, formData: FormData) {
 }
 
 export async function deleteRoute(id: string) {
+  await requireSession()
   await adminSupabase.from('routes').delete().eq('id', id)
   revalidatePath('/dashboard/routes')
   revalidatePath('/')
@@ -35,6 +41,7 @@ export async function deleteRoute(id: string) {
 }
 
 export async function toggleRouteStatus(id: string, isActive: boolean) {
+  await requireSession()
   await adminSupabase.from('routes').update({ is_active: !isActive }).eq('id', id)
   revalidatePath('/dashboard/routes')
   revalidatePath('/')

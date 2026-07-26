@@ -3,8 +3,11 @@
 import { revalidatePath } from 'next/cache'
 import { adminSupabase } from '@/lib/supabase/admin'
 import { uploadImage } from '@/lib/actions/upload'
+import { requireSession } from '@/lib/auth'
 
 export async function addFleetVehicle(formData: FormData) {
+  await requireSession()
+
   const name = formData.get('name') as string
   const type = formData.get('type') as string
   const description = formData.get('description') as string
@@ -27,6 +30,8 @@ export async function addFleetVehicle(formData: FormData) {
 }
 
 export async function updateFleetVehicle(id: string, formData: FormData) {
+  await requireSession()
+
   const name = formData.get('name') as string
   const type = formData.get('type') as string
   const description = formData.get('description') as string
@@ -50,6 +55,7 @@ export async function updateFleetVehicle(id: string, formData: FormData) {
 }
 
 export async function deleteFleetVehicle(id: string) {
+  await requireSession()
   await adminSupabase.from('fleet').delete().eq('id', id)
   revalidatePath('/dashboard/fleet')
   revalidatePath('/')
@@ -57,6 +63,7 @@ export async function deleteFleetVehicle(id: string) {
 }
 
 export async function toggleFleetStatus(id: string, isActive: boolean) {
+  await requireSession()
   await adminSupabase.from('fleet').update({ is_active: !isActive }).eq('id', id)
   revalidatePath('/dashboard/fleet')
   revalidatePath('/')

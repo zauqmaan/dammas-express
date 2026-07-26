@@ -1,3 +1,5 @@
+import { cookies } from 'next/headers'
+
 // The client's dashboard password (they can change this later)
 const DASHBOARD_PASSWORD = 'Dammas@2025'
 
@@ -21,5 +23,16 @@ export function verifySession(token: string): boolean {
     return payload.exp > Date.now()
   } catch {
     return false
+  }
+}
+
+// Call at the top of every dashboard Server Action so writes are actually
+// gated on login, not just the page render.
+export async function requireSession(): Promise<void> {
+  const cookieStore = await cookies()
+  const token = cookieStore.get('dammas_session')?.value
+
+  if (!token || !verifySession(token)) {
+    throw new Error('Your session has expired. Please log in again.')
   }
 }

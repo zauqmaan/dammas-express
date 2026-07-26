@@ -1,8 +1,8 @@
 const STATS: { number: string; symbol: string; symbolColor: string; label: string }[] = [
-  { number: "500", symbol: "+", symbolColor: "text-emerald-500", label: "Happy Customers" },
-  { number: "50", symbol: "+", symbolColor: "text-emerald-500", label: "Fleet Vehicles" },
+  { number: "50", symbol: "+", symbolColor: "text-emerald-500", label: "Happy Customers" },
+  { number: "5", symbol: "+", symbolColor: "text-emerald-500", label: "Fleet Vehicles" },
   { number: "5", symbol: "★", symbolColor: "text-amber-500", label: "Customer Rating" },
-  { number: "8", symbol: "", symbolColor: "text-emerald-500", label: "Daily Shifts" },
+  { number: "2", symbol: "", symbolColor: "text-emerald-500", label: "Daily Shifts" },
 ];
 
 export default function StatsBar() {

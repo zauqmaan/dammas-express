@@ -2,8 +2,11 @@
 
 import { revalidatePath } from 'next/cache'
 import { adminSupabase } from '@/lib/supabase/admin'
+import { requireSession } from '@/lib/auth'
 
 export async function addService(formData: FormData) {
+  await requireSession()
+
   const title = formData.get('title') as string
   const slug = formData.get('slug') as string
   const description = formData.get('description') as string
@@ -18,6 +21,8 @@ export async function addService(formData: FormData) {
 }
 
 export async function updateService(id: string, formData: FormData) {
+  await requireSession()
+
   const title = formData.get('title') as string
   const slug = formData.get('slug') as string
   const description = formData.get('description') as string
@@ -32,6 +37,7 @@ export async function updateService(id: string, formData: FormData) {
 }
 
 export async function deleteService(id: string) {
+  await requireSession()
   await adminSupabase.from('services').delete().eq('id', id)
   revalidatePath('/dashboard/services')
   revalidatePath('/')
@@ -39,6 +45,7 @@ export async function deleteService(id: string) {
 }
 
 export async function toggleServiceStatus(id: string, isActive: boolean) {
+  await requireSession()
   await adminSupabase.from('services').update({ is_active: !isActive }).eq('id', id)
   revalidatePath('/dashboard/services')
   revalidatePath('/')

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Plus, Pencil, Trash2, X } from 'lucide-react'
 import type { FleetVehicle } from '@/lib/supabase/types'
 import { addFleetVehicle, updateFleetVehicle, deleteFleetVehicle, toggleFleetStatus } from '@/lib/actions/fleet'
+import { handleActionError } from '@/lib/handle-action-error'
 
 const emptyForm = {
   name: '',
@@ -84,26 +85,38 @@ export default function FleetPage() {
       formData.set('image', imageFile)
     }
 
-    if (editingVehicle) {
-      await updateFleetVehicle(editingVehicle.id, formData)
-    } else {
-      await addFleetVehicle(formData)
+    try {
+      if (editingVehicle) {
+        await updateFleetVehicle(editingVehicle.id, formData)
+      } else {
+        await addFleetVehicle(formData)
+      }
+      closeModal()
+      fetchFleet()
+    } catch (err) {
+      handleActionError(err)
+    } finally {
+      setSaving(false)
     }
-
-    setSaving(false)
-    closeModal()
-    fetchFleet()
   }
 
   async function handleDelete(id: string) {
     if (!confirm('Are you sure you want to delete this vehicle?')) return
-    await deleteFleetVehicle(id)
-    fetchFleet()
+    try {
+      await deleteFleetVehicle(id)
+      fetchFleet()
+    } catch (err) {
+      handleActionError(err)
+    }
   }
 
   async function handleToggleStatus(id: string, isActive: boolean) {
-    await toggleFleetStatus(id, isActive)
-    fetchFleet()
+    try {
+      await toggleFleetStatus(id, isActive)
+      fetchFleet()
+    } catch (err) {
+      handleActionError(err)
+    }
   }
 
   return (

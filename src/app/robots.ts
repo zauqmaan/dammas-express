@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: '/dashboard/',
       },
     ],
-    sitemap: 'https://dammas-express.com/sitemap.xml',
+    sitemap: 'https://dammasexpress.ae/sitemap.xml',
   }
 }

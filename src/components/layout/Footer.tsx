@@ -1,11 +1,12 @@
+import Link from "next/link";
 import { Facebook, Instagram, Twitter, Youtube, Phone, Mail, MapPin, Clock } from "lucide-react";
 
 const QUICK_LINKS = [
-  { label: "Home", href: "#home" },
-  { label: "Services", href: "#services" },
-  { label: "Routes", href: "#routes" },
-  { label: "Portfolio", href: "#portfolio" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "/" },
+  { label: "Services", href: "/services" },
+  { label: "Routes", href: "/routes" },
+  { label: "Portfolio", href: "/portfolio" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 const SOCIALS = [
@@ -29,8 +30,9 @@ export default function Footer() {
           <div>
             <img src="/images/logo.png" alt="Dammas Express" className="h-14 w-auto" />
             <p className="mt-3 text-sm text-gray-400 leading-relaxed max-w-xs">
-              Premium car lift and transportation services across Dubai and
-              the UAE, trusted for reliability and discretion.
+              Trusted daily and monthly car lift services to Al Quoz from
+              Deira, Bur Dubai, Karama, Rigga & Abuhail, reliable pick &amp;
+              drop for staff and daily commuters.
             </p>
             <div className="flex items-center gap-3 mt-6">
               {SOCIALS.map(({ label, href, Icon }) => (
@@ -54,12 +56,12 @@ export default function Footer() {
             <ul className="space-y-3">
               {QUICK_LINKS.map((link) => (
                 <li key={link.href}>
-                  <a
+                  <Link
                     href={link.href}
                     className="text-sm text-gray-400 hover:text-white transition-colors"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -111,12 +113,12 @@ export default function Footer() {
               Get a quote for your next lift and travel with total peace of
               mind.
             </p>
-            <a
-              href="#contact"
+            <Link
+              href="/#contact"
               className="inline-flex bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2.5 rounded-lg font-medium text-sm transition-all"
             >
               Book Now
-            </a>
+            </Link>
           </div>
         </div>
 

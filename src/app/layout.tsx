@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://dammas-express.com"),
+  metadataBase: new URL("https://dammasexpress.ae"),
   title: {
     default: "Al Quoz Car Lift Services | Dammas Express Dubai",
     template: "%s | Dammas Express",
@@ -27,6 +27,7 @@ export const metadata: Metadata = {
     "dammas express",
   ],
   openGraph: {
+    url: "https://dammasexpress.ae",
     title: "Al Quoz Car Lift Services | Dammas Express",
     description:
       "Daily and monthly car lift services to Al Quoz. Starting from AED 250/month.",

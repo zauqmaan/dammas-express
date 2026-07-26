@@ -3,8 +3,11 @@
 import { revalidatePath } from 'next/cache'
 import { adminSupabase } from '@/lib/supabase/admin'
 import { uploadImage } from '@/lib/actions/upload'
+import { requireSession } from '@/lib/auth'
 
 export async function addPost(formData: FormData) {
+  await requireSession()
+
   const title = formData.get('title') as string
   const slug = formData.get('slug') as string
   const excerpt = formData.get('excerpt') as string
@@ -24,6 +27,8 @@ export async function addPost(formData: FormData) {
 }
 
 export async function updatePost(id: string, formData: FormData) {
+  await requireSession()
+
   const title = formData.get('title') as string
   const slug = formData.get('slug') as string
   const excerpt = formData.get('excerpt') as string
@@ -45,6 +50,7 @@ export async function updatePost(id: string, formData: FormData) {
 }
 
 export async function deletePost(id: string) {
+  await requireSession()
   await adminSupabase.from('blog_posts').delete().eq('id', id)
   revalidatePath('/dashboard/blog')
   revalidatePath('/')
@@ -53,6 +59,7 @@ export async function deletePost(id: string) {
 }
 
 export async function togglePublished(id: string, isPublished: boolean) {
+  await requireSession()
   await adminSupabase.from('blog_posts').update({ is_published: !isPublished }).eq('id', id)
   revalidatePath('/dashboard/blog')
   revalidatePath('/')

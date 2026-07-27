@@ -10,7 +10,7 @@ const NAV_LINKS = [
   { label: "Services", href: "/services" },
   { label: "Routes", href: "/routes" },
   { label: "Portfolio", href: "/portfolio" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export default function Header() {
@@ -65,7 +65,7 @@ export default function Header() {
 
           <div className="flex items-center gap-3">
             <Link
-              href="/#contact"
+              href="/contact"
               className="hidden sm:inline-flex bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2.5 rounded-lg font-medium text-sm transition-all"
             >
               Book Now
@@ -125,7 +125,7 @@ export default function Header() {
               </Link>
             ))}
             <Link
-              href="/#contact"
+              href="/contact"
               onClick={() => setMenuOpen(false)}
               className="mt-2 inline-flex justify-center bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2.5 rounded-lg font-medium text-sm transition-all"
             >

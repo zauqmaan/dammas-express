@@ -6,7 +6,7 @@ const QUICK_LINKS = [
   { label: "Services", href: "/services" },
   { label: "Routes", href: "/routes" },
   { label: "Portfolio", href: "/portfolio" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const SOCIALS = [
@@ -114,7 +114,7 @@ export default function Footer() {
               mind.
             </p>
             <Link
-              href="/#contact"
+              href="/contact"
               className="inline-flex bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2.5 rounded-lg font-medium text-sm transition-all"
             >
               Book Now

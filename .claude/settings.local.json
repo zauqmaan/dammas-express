@@ -44,7 +44,9 @@
       "Bash(npx --yes playwright install chromium)",
       "Bash(git add *)",
       "Bash(powershell -Command 'Get-Process node -ErrorAction SilentlyContinue | Where-Object {$_.Path -like '\\\\''*node.exe*'\\\\''} | Select-Object Id,Path')",
-      "Bash(git check-ignore *)"
+      "Bash(git check-ignore *)",
+      "Bash(echo \"exit code: $?\")",
+      "Bash(git ls-remote *)"
     ]
   }
 }

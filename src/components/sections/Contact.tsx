@@ -65,7 +65,12 @@ const INITIAL_FORM = {
 const inputClasses =
   "w-full bg-[#030712] border border-white/5 rounded-lg px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-colors";
 
-export default function Contact() {
+interface ContactProps {
+  /** Skip the section heading when the page already has one (e.g. the /contact page hero). */
+  hideHeading?: boolean;
+}
+
+export default function Contact({ hideHeading = false }: ContactProps) {
   const [form, setForm] = useState(INITIAL_FORM);
 
   const handleChange = (field: keyof typeof INITIAL_FORM) => (
@@ -118,18 +123,26 @@ Time: ${form.time}`;
   return (
     <section id="contact" className="py-20 md:py-28 bg-[#030712]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <p className="text-emerald-500 text-xs font-semibold tracking-[0.2em] uppercase">
-          Contact Us
-        </p>
-        <h2 className="mt-3 text-3xl md:text-4xl font-bold text-white tracking-tight">
-          Book Your Ride
-        </h2>
-        <p className="text-gray-400 text-base mt-4 max-w-xl">
-          Fill in the details below and we&apos;ll get back to you instantly on
-          WhatsApp.
-        </p>
+        {!hideHeading && (
+          <>
+            <p className="text-emerald-500 text-xs font-semibold tracking-[0.2em] uppercase">
+              Contact Us
+            </p>
+            <h2 className="mt-3 text-3xl md:text-4xl font-bold text-white tracking-tight">
+              Book Your Ride
+            </h2>
+            <p className="text-gray-400 text-base mt-4 max-w-xl">
+              Fill in the details below and we&apos;ll get back to you instantly
+              on WhatsApp.
+            </p>
+          </>
+        )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 mt-14">
+        <div
+          className={`grid grid-cols-1 lg:grid-cols-5 gap-12 ${
+            hideHeading ? "" : "mt-14"
+          }`}
+        >
           {/* Left column: Contact Info */}
           <div className="lg:col-span-2 space-y-8">
             {CONTACT_ITEMS.map(({ Icon, title, content }) => (

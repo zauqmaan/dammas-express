@@ -43,7 +43,8 @@
       "Bash(npx --yes playwright screenshot --viewport-size=1400,1400 --wait-for-timeout=1500 \"http://localhost:3100/#contact\" contact.png)",
       "Bash(npx --yes playwright install chromium)",
       "Bash(git add *)",
-      "Bash(powershell -Command 'Get-Process node -ErrorAction SilentlyContinue | Where-Object {$_.Path -like '\\\\''*node.exe*'\\\\''} | Select-Object Id,Path')"
+      "Bash(powershell -Command 'Get-Process node -ErrorAction SilentlyContinue | Where-Object {$_.Path -like '\\\\''*node.exe*'\\\\''} | Select-Object Id,Path')",
+      "Bash(git check-ignore *)"
     ]
   }
 }

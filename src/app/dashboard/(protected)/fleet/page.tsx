@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { Plus, Pencil, Trash2, X } from 'lucide-react'
 import type { FleetVehicle } from '@/lib/supabase/types'
 import { addFleetVehicle, updateFleetVehicle, deleteFleetVehicle, toggleFleetStatus } from '@/lib/actions/fleet'
-import { handleActionError } from '@/lib/handle-action-error'
 
 const emptyForm = {
   name: '',
@@ -94,7 +93,11 @@ export default function FleetPage() {
       closeModal()
       fetchFleet()
     } catch (err) {
-      handleActionError(err)
+      const message = err instanceof Error ? err.message : 'Something went wrong.'
+      alert(message)
+      if (message.toLowerCase().includes('session')) {
+        window.location.href = '/dashboard/login'
+      }
     } finally {
       setSaving(false)
     }
@@ -106,7 +109,11 @@ export default function FleetPage() {
       await deleteFleetVehicle(id)
       fetchFleet()
     } catch (err) {
-      handleActionError(err)
+      const message = err instanceof Error ? err.message : 'Something went wrong.'
+      alert(message)
+      if (message.toLowerCase().includes('session')) {
+        window.location.href = '/dashboard/login'
+      }
     }
   }
 
@@ -115,7 +122,11 @@ export default function FleetPage() {
       await toggleFleetStatus(id, isActive)
       fetchFleet()
     } catch (err) {
-      handleActionError(err)
+      const message = err instanceof Error ? err.message : 'Something went wrong.'
+      alert(message)
+      if (message.toLowerCase().includes('session')) {
+        window.location.href = '/dashboard/login'
+      }
     }
   }
 

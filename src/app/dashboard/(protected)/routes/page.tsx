@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { Plus, Pencil, Trash2, X } from 'lucide-react'
 import type { Route } from '@/lib/supabase/types'
 import { addRoute, updateRoute, deleteRoute, toggleRouteStatus } from '@/lib/actions/routes'
-import { handleActionError } from '@/lib/handle-action-error'
 
 const emptyForm = {
   from_location: '',

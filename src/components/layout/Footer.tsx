@@ -125,7 +125,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="mt-14 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-gray-500 text-center sm:text-left">
-            © 2025 DAMMAS EXPRESS UAE. All rights reserved.
+            © 2026 DAMMAS EXPRESS UAE. All rights reserved.
           </p>
           <p className="text-xs text-gray-500">Made with ❤️ in UAE</p>
         </div>

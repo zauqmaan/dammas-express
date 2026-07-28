@@ -46,7 +46,10 @@
       "Bash(powershell -Command 'Get-Process node -ErrorAction SilentlyContinue | Where-Object {$_.Path -like '\\\\''*node.exe*'\\\\''} | Select-Object Id,Path')",
       "Bash(git check-ignore *)",
       "Bash(echo \"exit code: $?\")",
-      "Bash(git ls-remote *)"
+      "Bash(git ls-remote *)",
+      "Bash(cp C:/Users/Quiroga/.claude/projects/D--claude-code-dammas-express-lift/eb61d03b-bfbb-4efc-8da5-eb32ae3e02a0/tool-results/b4isowxv3.txt C:/Users/Quiroga/AppData/Local/Temp/claude/D--claude-code-dammas-express-lift/eb61d03b-bfbb-4efc-8da5-eb32ae3e02a0/scratchpad/recovery/changeset-restore.patch)",
+      "Bash(git apply *)",
+      "Bash(pkill -f \"next start\")"
     ]
   }
 }

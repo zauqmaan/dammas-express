@@ -43,6 +43,7 @@ export default function InquiriesPage() {
         <table className="w-full">
           <thead>
             <tr className="bg-white/[0.02] border-b border-white/5">
+              <th className="text-left text-xs font-medium text-gray-500 uppercase tracking-wide px-6 py-3">Type</th>
               <th className="text-left text-xs font-medium text-gray-500 uppercase tracking-wide px-6 py-3">Name</th>
               <th className="text-left text-xs font-medium text-gray-500 uppercase tracking-wide px-6 py-3">Phone</th>
               <th className="text-left text-xs font-medium text-gray-500 uppercase tracking-wide px-6 py-3">Pickup</th>
@@ -56,19 +57,26 @@ export default function InquiriesPage() {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={8} className="px-6 py-8 text-center text-gray-500 text-sm">
+                <td colSpan={9} className="px-6 py-8 text-center text-gray-500 text-sm">
                   Loading inquiries...
                 </td>
               </tr>
             ) : inquiries.length === 0 ? (
               <tr>
-                <td colSpan={8} className="px-6 py-8 text-center text-gray-500 text-sm">
+                <td colSpan={9} className="px-6 py-8 text-center text-gray-500 text-sm">
                   No inquiries yet.
                 </td>
               </tr>
             ) : (
               inquiries.map((inquiry) => (
                 <tr key={inquiry.id} className={`border-b border-white/5 last:border-0 ${inquiry.is_read ? 'opacity-60' : ''}`}>
+                  <td className="px-6 py-4 text-sm">
+                    {inquiry.service_type === 'corporate' ? (
+                      <span className="bg-amber-500/10 text-amber-400 text-xs font-medium px-2.5 py-0.5 rounded-full whitespace-nowrap">🏢 Corporate</span>
+                    ) : (
+                      <span className="bg-white/5 text-gray-400 text-xs font-medium px-2.5 py-0.5 rounded-full whitespace-nowrap">👤 Individual</span>
+                    )}
+                  </td>
                   <td className="px-6 py-4 text-sm text-white font-medium">
                     <div className="flex items-center gap-2">
                       {!inquiry.is_read && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />}
@@ -77,9 +85,19 @@ export default function InquiriesPage() {
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-400">{inquiry.phone}</td>
                   <td className="px-6 py-4 text-sm text-gray-400">{inquiry.pickup_location ?? '—'}</td>
-                  <td className="px-6 py-4 text-sm text-gray-400">{inquiry.dropoff_location ?? '—'}</td>
-                  <td className="px-6 py-4 text-sm text-gray-400">{inquiry.date ? formatDate(inquiry.date) : '—'}</td>
-                  <td className="px-6 py-4 text-sm text-gray-400">{inquiry.time ?? '—'}</td>
+                  {inquiry.service_type === 'corporate' ? (
+                    <td colSpan={3} className="px-6 py-4 text-sm text-gray-400">
+                      <span className="text-white">{inquiry.company_name ?? '—'}</span>
+                      {inquiry.employee_count !== null && <span> · {inquiry.employee_count} staff</span>}
+                      {inquiry.work_timings && <span> · ⏰ {inquiry.work_timings}</span>}
+                    </td>
+                  ) : (
+                    <>
+                      <td className="px-6 py-4 text-sm text-gray-400">{inquiry.dropoff_location ?? '—'}</td>
+                      <td className="px-6 py-4 text-sm text-gray-400">{inquiry.date ? formatDate(inquiry.date) : '—'}</td>
+                      <td className="px-6 py-4 text-sm text-gray-400">{inquiry.time ?? '—'}</td>
+                    </>
+                  )}
                   <td className="px-6 py-4 text-sm">
                     {inquiry.is_read ? (
                       <span className="bg-gray-500/10 text-gray-500 text-xs px-2.5 py-0.5 rounded-full">Read</span>

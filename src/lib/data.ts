@@ -52,7 +52,18 @@ export async function getPostBySlug(slug: string) {
   return data as BlogPost || null
 }
 
-export async function submitInquiry(inquiry: { name: string, phone: string, pickup_location: string, dropoff_location: string, date: string, time: string }) {
+export async function submitInquiry(inquiry: {
+  service_type: 'individual' | 'corporate'
+  name: string
+  phone: string
+  pickup_location: string
+  dropoff_location: string | null
+  date: string | null
+  time: string | null
+  company_name: string | null
+  employee_count: number | null
+  work_timings: string | null
+}) {
   const { data, error } = await supabase
     .from('inquiries')
     .insert([inquiry])

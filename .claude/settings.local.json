@@ -49,7 +49,11 @@
       "Bash(git ls-remote *)",
       "Bash(cp C:/Users/Quiroga/.claude/projects/D--claude-code-dammas-express-lift/eb61d03b-bfbb-4efc-8da5-eb32ae3e02a0/tool-results/b4isowxv3.txt C:/Users/Quiroga/AppData/Local/Temp/claude/D--claude-code-dammas-express-lift/eb61d03b-bfbb-4efc-8da5-eb32ae3e02a0/scratchpad/recovery/changeset-restore.patch)",
       "Bash(git apply *)",
-      "Bash(pkill -f \"next start\")"
+      "Bash(pkill -f \"next start\")",
+      "PowerShell(npm install *)",
+      "PowerShell(Get-Content node_modules/@tiptap/extension-underline/dist/index.d.ts; \"--- COLOR ---\"; Get-Content node_modules/@tiptap/extension-color/dist/index.d.ts; \"--- PLACEHOLDER ---\"; Get-Content node_modules/@tiptap/extension-placeholder/dist/index.d.ts)",
+      "PowerShell(npx tsc --noEmit)",
+      "PowerShell(npm run *)"
     ]
   }
 }

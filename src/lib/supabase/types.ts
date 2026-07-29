@@ -49,12 +49,16 @@ export interface BlogPost {
 
 export interface Inquiry {
   id: string
+  service_type: 'individual' | 'corporate'
   name: string
   phone: string
   pickup_location: string | null
   dropoff_location: string | null
   date: string | null
   time: string | null
+  company_name: string | null
+  employee_count: number | null
+  work_timings: string | null
   is_read: boolean
   created_at: string
 }

@@ -11,7 +11,7 @@ const CONTACT_ITEMS = [
     content: (
       <>
         <p className="text-gray-400 text-sm mt-1">
-          Burj Nahar Building 303 office, Dubai, UAE
+          Al falasi building 2nd floor 201 office, Dubai, UAE
         </p>
         <p className="text-gray-500 text-xs mt-1">📍 We serve all Emirates</p>
       </>
@@ -48,7 +48,7 @@ const CONTACT_ITEMS = [
   },
 ];
 
-const OFFICE_ADDRESS = "Burj Nahar Building 303 office, Dubai, UAE";
+const OFFICE_ADDRESS = "Al falasi building 2nd floor 201 office, Dubai, UAE";
 const MAP_EMBED_SRC = `https://www.google.com/maps?q=${encodeURIComponent(
   OFFICE_ADDRESS
 )}&output=embed`;
@@ -60,7 +60,12 @@ const INITIAL_FORM = {
   dropoff: "",
   date: "",
   time: "",
+  companyName: "",
+  employeeCount: "",
+  workTimings: "",
 };
+
+type ServiceType = "individual" | "corporate";
 
 const inputClasses =
   "w-full bg-[#030712] border border-white/5 rounded-lg px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-colors";
@@ -72,6 +77,7 @@ interface ContactProps {
 
 export default function Contact({ hideHeading = false }: ContactProps) {
   const [form, setForm] = useState(INITIAL_FORM);
+  const [serviceType, setServiceType] = useState<ServiceType>("individual");
 
   const handleChange = (field: keyof typeof INITIAL_FORM) => (
     e: ChangeEvent<HTMLInputElement>
@@ -93,31 +99,48 @@ export default function Contact({ hideHeading = false }: ContactProps) {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const message = `New Booking Request:
-Name: ${form.name}
-WhatsApp: ${form.phone}
-Pickup: ${form.pickup}
-Drop-off: ${form.dropoff}
-Date: ${form.date}
-Time: ${form.time}`;
+    const isCorporate = serviceType === "corporate";
+
+    const message = isCorporate
+      ? `🏢 *NEW CORPORATE LEAD - Dammas Express*
+
+👤 Contact: ${form.name}
+📱 Phone: ${form.phone}
+🏢 Company: ${form.companyName}
+👥 Employees: ${form.employeeCount}
+📍 Pickup Areas: ${form.pickup}
+⏰ Timings: ${form.workTimings}`
+      : `🚗 *New Booking Request - Dammas Express*
+
+👤 Name: ${form.name}
+📱 WhatsApp: ${form.phone}
+📍 Pickup: ${form.pickup}
+🏁 Drop-off: ${form.dropoff}
+📅 Date: ${form.date}
+🕐 Time: ${form.time}`;
 
     const encodedMessage = encodeURIComponent(message);
     window.open(`https://wa.me/971566625302?text=${encodedMessage}`, "_blank");
 
     try {
       await submitInquiry({
+        service_type: serviceType,
         name: form.name,
         phone: form.phone,
         pickup_location: form.pickup,
-        dropoff_location: form.dropoff,
-        date: form.date,
-        time: form.time,
+        dropoff_location: isCorporate ? null : form.dropoff,
+        date: isCorporate ? null : form.date,
+        time: isCorporate ? null : form.time,
+        company_name: isCorporate ? form.companyName : null,
+        employee_count: isCorporate ? Number(form.employeeCount) : null,
+        work_timings: isCorporate ? form.workTimings : null,
       });
     } catch (error) {
       console.error(error);
     }
 
     setForm(INITIAL_FORM);
+    setServiceType("individual");
   };
 
   return (
@@ -169,98 +192,237 @@ Time: ${form.time}`;
           {/* Right column: Booking Form */}
           <div className="lg:col-span-3 bg-[#0F172A] border border-white/5 rounded-xl p-6 md:p-8">
             <form onSubmit={handleSubmit}>
-              <div className="mb-5">
-                <label className="text-sm font-medium text-gray-300 mb-2 block">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Enter your full name"
-                  value={form.name}
-                  onChange={handleChange("name")}
-                  className={inputClasses}
-                />
+              <label className="text-sm font-medium text-gray-300 mb-3 block">
+                I am looking for
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                <button
+                  type="button"
+                  onClick={() => setServiceType("individual")}
+                  aria-pressed={serviceType === "individual"}
+                  className={`p-4 rounded-xl border text-left transition-all duration-300 ${
+                    serviceType === "individual"
+                      ? "bg-emerald-500/10 border-emerald-500/50 text-white"
+                      : "bg-[#030712] border-white/5 text-gray-400 hover:border-white/20"
+                  }`}
+                >
+                  <p className="font-semibold text-sm">👤 Individual Passenger</p>
+                  <p className="text-xs mt-1 opacity-70">
+                    Daily or monthly car lift pass
+                  </p>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setServiceType("corporate")}
+                  aria-pressed={serviceType === "corporate"}
+                  className={`p-4 rounded-xl border text-left transition-all duration-300 ${
+                    serviceType === "corporate"
+                      ? "bg-amber-500/10 border-amber-500/50 text-white"
+                      : "bg-[#030712] border-white/5 text-gray-400 hover:border-white/20"
+                  }`}
+                >
+                  <p className="font-semibold text-sm">
+                    🏢 Corporate / HR Contract
+                  </p>
+                  <p className="text-xs mt-1 opacity-70">
+                    Staff transport for companies
+                  </p>
+                </button>
               </div>
 
-              <div className="mb-5">
-                <label className="text-sm font-medium text-gray-300 mb-2 block">
-                  WhatsApp Number
-                </label>
-                <input
-                  type="tel"
-                  required
-                  placeholder="+971 50 123 4567"
-                  value={form.phone}
-                  onChange={handleChange("phone")}
-                  className={inputClasses}
-                />
-              </div>
+              {serviceType === "corporate" && (
+                <div className="space-y-5">
+                  <div>
+                    <label className="text-sm font-medium text-gray-300 mb-2 block">
+                      Company Name *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g., ABC Construction LLC"
+                      value={form.companyName}
+                      onChange={handleChange("companyName")}
+                      className={inputClasses}
+                    />
+                  </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-                <div>
-                  <label className="text-sm font-medium text-gray-300 mb-2 block">
-                    Pickup Location
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Enter pickup location"
-                    value={form.pickup}
-                    onChange={handleChange("pickup")}
-                    className={inputClasses}
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-300 mb-2 block">
-                    Drop-off Location
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Enter drop-off location"
-                    value={form.dropoff}
-                    onChange={handleChange("dropoff")}
-                    className={inputClasses}
-                  />
-                </div>
-              </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium text-gray-300 mb-2 block">
+                        Contact Person *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="HR Manager name"
+                        value={form.name}
+                        onChange={handleChange("name")}
+                        className={inputClasses}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-300 mb-2 block">
+                        Phone *
+                      </label>
+                      <input
+                        type="tel"
+                        required
+                        placeholder="+971 50 123 4567"
+                        value={form.phone}
+                        onChange={handleChange("phone")}
+                        className={inputClasses}
+                      />
+                    </div>
+                  </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-                <div>
-                  <label className="text-sm font-medium text-gray-300 mb-2 block">
-                    Date
-                  </label>
-                  <input
-                    type="date"
-                    required
-                    value={form.date}
-                    onChange={handleChange("date")}
-                    onClick={openPicker}
-                    className={inputClasses}
-                  />
+                  <div>
+                    <label className="text-sm font-medium text-gray-300 mb-2 block">
+                      Number of Employees *
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      required
+                      placeholder="e.g., 25"
+                      value={form.employeeCount}
+                      onChange={handleChange("employeeCount")}
+                      className={inputClasses}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-gray-300 mb-2 block">
+                      Pickup Locations *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g., Deira, Bur Dubai, Karama"
+                      value={form.pickup}
+                      onChange={handleChange("pickup")}
+                      className={inputClasses}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-gray-300 mb-2 block">
+                      Work Timings *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g., 7 AM to 5 PM"
+                      value={form.workTimings}
+                      onChange={handleChange("workTimings")}
+                      className={inputClasses}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-300 mb-2 block">
-                    Time
-                  </label>
-                  <input
-                    type="time"
-                    required
-                    value={form.time}
-                    onChange={handleChange("time")}
-                    onClick={openPicker}
-                    className={inputClasses}
-                  />
+              )}
+
+              {serviceType === "individual" && (
+                <div className="space-y-5">
+                  <div>
+                    <label className="text-sm font-medium text-gray-300 mb-2 block">
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Enter your full name"
+                      value={form.name}
+                      onChange={handleChange("name")}
+                      className={inputClasses}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-gray-300 mb-2 block">
+                      WhatsApp Number
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      placeholder="+971 50 123 4567"
+                      value={form.phone}
+                      onChange={handleChange("phone")}
+                      className={inputClasses}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                      <label className="text-sm font-medium text-gray-300 mb-2 block">
+                        Pickup Location
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Enter pickup location"
+                        value={form.pickup}
+                        onChange={handleChange("pickup")}
+                        className={inputClasses}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-300 mb-2 block">
+                        Drop-off Location
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Enter drop-off location"
+                        value={form.dropoff}
+                        onChange={handleChange("dropoff")}
+                        className={inputClasses}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                      <label className="text-sm font-medium text-gray-300 mb-2 block">
+                        Date
+                      </label>
+                      <input
+                        type="date"
+                        required
+                        value={form.date}
+                        onChange={handleChange("date")}
+                        onClick={openPicker}
+                        className={inputClasses}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-300 mb-2 block">
+                        Time
+                      </label>
+                      <input
+                        type="time"
+                        required
+                        value={form.time}
+                        onChange={handleChange("time")}
+                        onClick={openPicker}
+                        className={inputClasses}
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
 
               <button
                 type="submit"
-                className="w-full mt-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3.5 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/25 flex items-center justify-center gap-2"
+                className={`w-full mt-6 text-white font-semibold py-3.5 rounded-lg transition-all duration-300 hover:shadow-lg flex items-center justify-center gap-2 ${
+                  serviceType === "corporate"
+                    ? "bg-amber-500 hover:bg-amber-600 hover:shadow-amber-500/25"
+                    : "bg-emerald-500 hover:bg-emerald-600 hover:shadow-emerald-500/25"
+                }`}
               >
                 <MessageCircle size={18} />
-                Book Now via WhatsApp
+                {serviceType === "corporate"
+                  ? "Request Corporate Quote"
+                  : "Book Now via WhatsApp"}
               </button>
             </form>
           </div>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Plus, Pencil, Trash2, X, FileText } from 'lucide-react'
-import ReactSimpleWysiwyg from 'react-simple-wysiwyg'
+import RichTextEditor from '@/components/dashboard/RichTextEditor'
 import type { BlogPost } from '@/lib/supabase/types'
 import { addPost, updatePost, deletePost, togglePublished } from '@/lib/actions/blog'
 import { formatDate } from '@/lib/format'
@@ -273,14 +273,7 @@ export default function BlogPage() {
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-300">Content</label>
-                <div className="bg-[#030712] border border-white/5 rounded-lg overflow-hidden">
-                  <ReactSimpleWysiwyg
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    className="w-full min-h-[250px] p-4 text-sm text-gray-300 bg-transparent focus:outline-none [&_.wysiwyg-editor]:bg-transparent [&_.wysiwyg-toolbar]:bg-white/5 [&_.wysiwyg-toolbar]:border-b [&_.wysiwyg-toolbar]:border-white/5"
-                  />
-                </div>
-                <p className="text-gray-600 text-xs">Select text to see formatting options (Bold, Italic, Lists, etc.)</p>
+                <RichTextEditor content={content} onChange={(html) => setContent(html)} />
               </div>
 
               <div>

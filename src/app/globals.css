@@ -77,3 +77,12 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .ProseMirror ul { list-style: disc; }
 .ProseMirror ol { list-style: decimal; }
 .ProseMirror strong { color: white; }
+
+/* Route Marquee Animation */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 10s linear infinite;
+}

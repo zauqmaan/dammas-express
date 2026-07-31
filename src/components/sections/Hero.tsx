@@ -11,11 +11,11 @@ const TRUST_ITEMS = [
 ];
 
 const SLIDES = [
-  "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1920&q=80",
-  "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=1920&q=80",
-  "https://images.unsplash.com/photo-1580674684081-7617fbf3d745?w=1920&q=80",
-  "https://images.unsplash.com/photo-1518684079-3c830dcef090?w=1920&q=80",
-];
+  '/images/dammas-express-fleets-banner.jpeg',
+  '/images/bruj-khalifa-landscape.jfif',
+  '/images/home-banner-uae-landscape.jfif',
+  '/images/dammas-express-banner.jpg'
+]
 
 const fadeUp = (delay: number) => ({
   initial: { opacity: 0, y: 20 },

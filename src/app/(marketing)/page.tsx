@@ -1,4 +1,5 @@
 import Hero from "@/components/sections/Hero";
+import RouteMarquee from "@/components/sections/RouteMarquee";
 import WhyChooseUs from "@/components/sections/WhyChooseUs";
 import StatsBar from "@/components/sections/StatsBar";
 import Services from "@/components/sections/Services";
@@ -18,6 +19,7 @@ export default async function Home() {
   return (
     <main id="home">
       <Hero />
+      <RouteMarquee />
       <WhyChooseUs />
       <StatsBar />
       <Services data={services} />

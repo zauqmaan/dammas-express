@@ -6,6 +6,22 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  // The editor's "Insert WhatsApp Button" writes these utilities into HTML that
+  // lives in the database, so Tailwind can't see them when scanning source.
+  safelist: [
+    'inline-flex',
+    'items-center',
+    'gap-2',
+    'bg-emerald-500',
+    'hover:bg-emerald-600',
+    'text-white',
+    'font-semibold',
+    'px-6',
+    'py-3',
+    'rounded-lg',
+    'my-4',
+    'no-underline',
+  ],
   theme: {
     extend: {
       colors: {

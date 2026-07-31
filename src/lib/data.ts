@@ -21,6 +21,17 @@ export async function getRoutes() {
   return data as Route[] || []
 }
 
+export async function getRouteBySlug(slug: string) {
+  const { data, error } = await supabase
+    .from('routes')
+    .select('*')
+    .eq('slug', slug)
+    .eq('is_active', true)
+    .single()
+  if (error) console.error(error)
+  return data as Route || null
+}
+
 export async function getFleet() {
   const { data, error } = await supabase
     .from('fleet')

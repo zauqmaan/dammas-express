@@ -72,6 +72,18 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .ProseMirror h2 { color: white; font-size: 1.5rem; font-weight: bold; margin-top: 1rem; margin-bottom: 0.5rem; }
 .ProseMirror h3 { color: white; font-size: 1.25rem; font-weight: bold; margin-top: 0.75rem; margin-bottom: 0.25rem; }
 .ProseMirror a { color: #10B981; text-decoration: underline; }
+/* Prevents underline on our custom buttons */
+.ProseMirror a.inline-flex { text-decoration: none; color: #FFFFFF; }
+
+/* Editor CTA buttons rendered on the public pages. The `prose-a:*` modifiers on
+   the article wrapper outrank the button's own utilities, so pin colour and
+   underline here — this also covers buttons saved before `not-prose` was added
+   to the inserted markup. */
+.prose a.inline-flex,
+.prose a.inline-flex:hover {
+  color: #FFFFFF;
+  text-decoration: none;
+}
 .ProseMirror ul, .ProseMirror ol { padding-left: 1.5rem; color: #9CA3AF; }
 /* Tailwind's preflight strips list markers; restore them inside the editor. */
 .ProseMirror ul { list-style: disc; }

@@ -49,9 +49,16 @@ const CONTACT_ITEMS = [
 ];
 
 const OFFICE_ADDRESS = "Al falasi building 2nd floor 201 office, Dubai, UAE";
+
+// Google geocodes buildings, not floors — "2nd floor 201 office" only throws the
+// match off, and several Dubai buildings share the "Al Falasi" name. Keep this
+// query to what is actually locatable. For an exact pin, replace it with the
+// coordinates from Google Maps (right-click the building > copy the "25.2xx,
+// 55.3xx" pair), which take priority over any name lookup.
+const MAP_QUERY = "Al Falasi Building, Dubai, UAE";
 const MAP_EMBED_SRC = `https://www.google.com/maps?q=${encodeURIComponent(
-  OFFICE_ADDRESS
-)}&output=embed`;
+  MAP_QUERY
+)}&z=17&output=embed`;
 
 const INITIAL_FORM = {
   name: "",

@@ -19,9 +19,9 @@ const FEATURES: {
     Icon: MapPin,
     iconBg: "bg-amber-500/10",
     iconColor: "text-amber-500",
-    title: "All Emirates Coverage",
+    title: "Dedicated Al Quoz Commute Hubs",
     description:
-      "From Dubai to Abu Dhabi, Sharjah, Ajman, and beyond — we cover every major route across the UAE.",
+      "While we cover multiple routes, our fleet specializes in seamless, direct daily worker transport and car lift lines straight into Al Quoz Industrial Area 1, 2, 3, and 4.",
   },
   {
     Icon: ShieldCheck,
@@ -35,9 +35,9 @@ const FEATURES: {
     Icon: Clock,
     iconBg: "bg-amber-500/10",
     iconColor: "text-amber-500",
-    title: "Fixed Shift Timings",
+    title: "Aligned Corporate Shift Timings",
     description:
-      "Convenient morning (7 to 10 AM) and evening (5 to 8 PM) shifts designed for regular office and factory commuters.",
+      "Perfect for commercial environments. Fixed morning shifts (7:00 AM to 10:00 AM) and evening returns (5:00 PM to 8:00 PM) guarantee you or your staff never clock in late.",
   },
 ];
 

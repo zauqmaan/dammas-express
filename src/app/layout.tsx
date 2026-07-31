@@ -11,7 +11,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("https://dammasexpress.ae"),
   title: {
-    default: "Al Quoz Car Lift Services | Dammas Express Dubai",
+    default: "Al Quoz Car Lift Services & Staff Transport Service | Dammas Express",
     template: "%s | Dammas Express",
   },
   description:

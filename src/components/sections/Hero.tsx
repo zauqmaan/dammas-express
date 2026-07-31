@@ -67,11 +67,11 @@ export default function Hero() {
         className="relative z-20 mt-8 max-w-4xl mx-auto text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white text-center leading-[1.1]"
       >
         <span className="bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">
-          Reliable
+          Premium
         </span>{" "}
-        Car Lift
+        Al Quoz Car Lift
         <br />
-        Services to Al Quoz
+        Services &amp; Staff Transport Service
       </motion.h1>
 
       {/* Subheadline */}
@@ -79,7 +79,8 @@ export default function Hero() {
         {...fadeUp(0.3)}
         className="relative z-20 mt-6 max-w-2xl mx-auto text-lg md:text-xl text-gray-400 text-center leading-relaxed"
       >
-        Affordable daily and monthly rides from Deira, Bur Dubai, and Karama to Al Quoz.
+        Affordable, RTA-licensed monthly passenger pick-and-drop to Al Quoz Industrial Area
+        from Deira, Bur Dubai, Karama, Rigga, and Abu Hail. Secure your fixed shift seat today.
       </motion.p>
 
       {/* CTA Buttons */}

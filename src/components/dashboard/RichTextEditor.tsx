@@ -24,7 +24,20 @@ import {
   AlignRight,
   Link2,
   Unlink,
+  MessageSquare,
 } from 'lucide-react'
+
+// The WhatsApp CTA the "Insert Button" toolbar action drops into the content.
+// Every utility class here is safelisted in tailwind.config.ts so it survives
+// purging on the public pages, where this HTML is rendered from the database.
+// `not-prose` opts the button out of the @tailwindcss/typography link styling
+// (prose-a:text-emerald-400 / hover:prose-a:underline) that otherwise wins on
+// the public pages and turns the label emerald with a hover underline.
+const CTA_BUTTON_CLASS =
+  'not-prose inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-6 py-3 rounded-lg my-4 no-underline'
+
+const CTA_BUTTON_HREF =
+  'https://wa.me/971566625302?text=Hi%2C%20I%20want%20to%20book%20a%20seat'
 
 type RichTextEditorProps = {
   content: string
@@ -38,6 +51,19 @@ const COLORS = [
   { label: 'Amber', value: '#F59E0B' },
   { label: 'Red', value: '#EF4444' },
 ]
+
+// TipTap only keeps mark attributes declared in the schema, so anything not
+// listed here is dropped when the inserted button HTML is parsed. `class` is
+// what makes the CTA render as a button rather than a plain link.
+const StyledLink = Link.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      class: { default: null },
+      style: { default: null },
+    }
+  },
+})
 
 function ToolbarButton({
   onClick,
@@ -224,6 +250,25 @@ function Toolbar({ editor }: { editor: Editor }) {
       >
         <Unlink size={16} />
       </ToolbarButton>
+      <button
+        type="button"
+        onClick={() => {
+          const text = window.prompt('Enter button text:', 'Book Your Seat Now')
+          if (text) {
+            editor
+              .chain()
+              .focus()
+              .insertContent(
+                `<a href="${CTA_BUTTON_HREF}" class="${CTA_BUTTON_CLASS}" target="_blank">${text}</a><p></p>`
+              )
+              .run()
+          }
+        }}
+        className="p-2 rounded text-gray-500 hover:text-white hover:bg-white/5 transition-colors"
+        title="Insert WhatsApp Button"
+      >
+        <MessageSquare size={16} />
+      </button>
     </div>
   )
 }
@@ -238,7 +283,7 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
       TextStyle,
       Color,
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
-      Link.configure({ openOnClick: false, autolink: true }),
+      StyledLink.configure({ openOnClick: false, autolink: true }),
       Placeholder.configure({ placeholder: 'Start writing your blog post here...' }),
     ],
     content,

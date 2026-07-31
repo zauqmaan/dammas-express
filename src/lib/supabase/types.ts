@@ -9,6 +9,11 @@ export interface Service {
   is_active: boolean
 }
 
+export interface RouteFaq {
+  question: string
+  answer: string
+}
+
 export interface Route {
   id: string
   from_location: string
@@ -16,6 +21,13 @@ export interface Route {
   duration: string
   price_one_way: string
   price_return: string
+  slug: string
+  content: string | null
+  pickup_zones: string | null
+  dropoff_zones: string | null
+  faq: RouteFaq[] | null
+  meta_title: string | null
+  meta_description: string | null
   sort_order: number
   is_active: boolean
 }

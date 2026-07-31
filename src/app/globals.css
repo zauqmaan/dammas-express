@@ -90,11 +90,16 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .ProseMirror ol { list-style: decimal; }
 .ProseMirror strong { color: white; }
 
-/* Route Marquee Animation */
+/* Route Marquee Animation
+   The track holds two identical copies of the route list and is sized with w-max,
+   so -50% is exactly one copy: the seam is invisible and the loop never resets
+   visibly. Duration therefore covers one full copy — roughly 2400px of routes —
+   so adding routes makes it faster unless this value grows to match. */
 @keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
 .animate-marquee {
-  animation: marquee 10s linear infinite;
+  animation: marquee 40s linear infinite;
+  will-change: transform;
 }

@@ -23,7 +23,7 @@ export default async function Home() {
       <RouteMarquee />
       <WhyChooseUs />
       <StatsBar />
-      <div className="text-center max-w-2xl mx-auto mb-12">
+      <div className="text-center max-w-2xl mx-auto my-12">
         <p className="text-gray-400 text-base">
           Looking for a structured corporate fleet arrangement? Learn more about our specialized{' '}
           <Link href="/services" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-4 transition-colors">

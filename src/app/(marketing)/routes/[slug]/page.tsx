@@ -34,7 +34,7 @@ export async function generateMetadata({
   return {
     title:
       route.meta_title ||
-      `Monthly Car Lift from ${route.from_location} to Al Quoz | Dammas Express`,
+      `Deira Car Lift & Transport from ${route.from_location} to Al Quoz | Dammas Express`,
     description:
       route.meta_description ||
       `Affordable daily and monthly car lift from ${route.from_location} to Al Quoz Industrial Area. Book via WhatsApp!`,
@@ -74,6 +74,11 @@ export default async function RouteDetailPage({ params }: RouteDetailPageProps) 
       value: "Toyota HiAce & Coaster",
       note: "Air-conditioned 15-seater and 30-seater",
     },
+    {
+      title: "Distance & Time",
+      value: route.duration,
+      note: "via E11 / E44",
+    },
   ];
 
   return (
@@ -106,7 +111,7 @@ export default async function RouteDetailPage({ params }: RouteDetailPageProps) 
       {/* 2. Quick facts grid */}
       <section className="py-20 bg-[#030712]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             {quickFacts.map((fact) => (
               <div
                 key={fact.title}

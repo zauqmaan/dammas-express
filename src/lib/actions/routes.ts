@@ -11,7 +11,7 @@ function parseFaq(raw: FormDataEntryValue | null): RouteFaq[] {
   let parsedFaq: RouteFaq[] = []
   try {
     parsedFaq = JSON.parse(raw as string)
-  } catch (e) {
+  } catch {
     parsedFaq = []
   }
   return Array.isArray(parsedFaq) ? parsedFaq : []

@@ -4,15 +4,15 @@ import { useState, type FormEvent, type ChangeEvent, type MouseEvent } from "rea
 import { MapPin, Phone, Mail, Clock, MessageCircle } from "lucide-react";
 import { submitInquiry } from "@/lib/data";
 
+const OFFICE_ADDRESS = "Al falasi building 2nd floor 201 office, Dubai, UAE";
+
 const CONTACT_ITEMS = [
   {
     Icon: MapPin,
     title: "Our Office",
     content: (
       <>
-        <p className="text-gray-400 text-sm mt-1">
-          Al falasi building 2nd floor 201 office, Dubai, UAE
-        </p>
+        <p className="text-gray-400 text-sm mt-1">{OFFICE_ADDRESS}</p>
         <p className="text-gray-500 text-xs mt-1">📍 We serve all Emirates</p>
       </>
     ),
@@ -47,8 +47,6 @@ const CONTACT_ITEMS = [
     content: <p className="text-gray-400 text-sm mt-1">24/7 Available</p>,
   },
 ];
-
-const OFFICE_ADDRESS = "Al falasi building 2nd floor 201 office, Dubai, UAE";
 
 // Google geocodes buildings, not floors — "2nd floor 201 office" only throws the
 // match off, and several Dubai buildings share the "Al Falasi" name. Keep this

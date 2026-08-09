@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Calendar, Clock, MessageCircle } from "lucide-react";
-import { getPostBySlug, getPublishedPosts } from "@/lib/data";
+import { ArrowLeft, ArrowRight, Calendar, Clock, MessageCircle } from "lucide-react";
+import BlogCard from "@/components/ui/BlogCard";
+import { getPostBySlug, getPublishedPosts, getRelatedPosts } from "@/lib/data";
 import { formatDate } from "@/lib/format";
 
 interface BlogArticlePageProps {
@@ -41,9 +42,11 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
     notFound();
   }
 
+  const relatedPosts = await getRelatedPosts(post.slug, post.category);
+
   return (
     <div className="pt-32 pb-20 bg-[#030712]">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <Link
           href="/blog"
           className="inline-flex items-center gap-2 text-gray-500 hover:text-white text-sm transition-colors mb-8"
@@ -106,6 +109,29 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
             Book Now via WhatsApp
           </a>
         </div>
+
+        {relatedPosts.length > 0 && (
+          <div className="mt-20 border-t border-white/5 pt-12">
+            <div className="flex items-center justify-between gap-4">
+              <h2 className="text-2xl font-bold text-white tracking-tight">
+                Related Articles
+              </h2>
+              <Link
+                href="/blog"
+                className="inline-flex items-center gap-1 text-emerald-500 hover:text-emerald-400 text-sm font-medium transition-colors shrink-0"
+              >
+                View All
+                <ArrowRight size={16} />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+              {relatedPosts.map((relatedPost) => (
+                <BlogCard key={relatedPost.slug} post={relatedPost} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

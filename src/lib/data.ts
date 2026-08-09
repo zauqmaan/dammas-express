@@ -63,6 +63,14 @@ export async function getPostBySlug(slug: string) {
   return data as BlogPost || null
 }
 
+export async function getRelatedPosts(slug: string, category: string, limit = 3) {
+  const posts = await getPublishedPosts()
+  const others = posts.filter((post) => post.slug !== slug)
+  const sameCategory = others.filter((post) => post.category === category)
+  const rest = others.filter((post) => post.category !== category)
+  return [...sameCategory, ...rest].slice(0, limit)
+}
+
 export async function submitInquiry(inquiry: {
   service_type: 'individual' | 'corporate'
   name: string

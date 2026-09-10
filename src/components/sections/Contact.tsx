@@ -3,6 +3,7 @@
 import { useState, type FormEvent, type ChangeEvent, type MouseEvent } from "react";
 import { MapPin, Phone, Mail, Clock, MessageCircle } from "lucide-react";
 import { submitInquiry } from "@/lib/data";
+import CitySkyline from "@/components/graphics/CitySkyline";
 
 const OFFICE_ADDRESS = "Al falasi building 2nd floor 201 office, Dubai, UAE";
 
@@ -149,8 +150,12 @@ export default function Contact({ hideHeading = false }: ContactProps) {
   };
 
   return (
-    <section id="contact" className="py-20 md:py-28 bg-[#030712]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="contact" className="relative overflow-hidden py-20 md:py-28 bg-[#030712]">
+      {/* Ambient art: the skyline sits low and full-width so the form above it
+          stays the focus */}
+      <CitySkyline className="pointer-events-none select-none hidden md:block absolute -bottom-6 -left-8 w-[120%] max-w-none opacity-[0.07] animate-sway-x" />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {!hideHeading && (
           <>
             <p className="text-emerald-500 text-xs font-semibold tracking-[0.2em] uppercase">

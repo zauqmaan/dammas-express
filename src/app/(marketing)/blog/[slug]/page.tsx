@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, Calendar, Clock, MessageCircle } from "lucide-react";
 import BlogCard from "@/components/ui/BlogCard";
 import { getPostBySlug, getPublishedPosts, getRelatedPosts } from "@/lib/data";
+import { prepareContentHtml } from "@/lib/content";
 import { formatDate } from "@/lib/format";
 
 interface BlogArticlePageProps {
@@ -91,7 +92,7 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
           prose-a:text-emerald-400 prose-a:no-underline hover:prose-a:underline
           prose-li:text-gray-400
           prose-strong:text-white"
-          dangerouslySetInnerHTML={{ __html: post.content }}
+          dangerouslySetInnerHTML={{ __html: prepareContentHtml(post.content) }}
         />
 
         <div className="mt-16 p-8 bg-[#0F172A] border border-white/5 rounded-xl text-center">

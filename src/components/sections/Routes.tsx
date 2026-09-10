@@ -1,5 +1,6 @@
 import type { Route } from "@/lib/supabase/types";
 import RouteCard from "@/components/ui/RouteCard";
+import RouteSchematic from "@/components/graphics/RouteSchematic";
 
 interface RoutesProps {
   data: Route[];
@@ -7,8 +8,11 @@ interface RoutesProps {
 
 export default function Routes({ data }: RoutesProps) {
   return (
-    <section id="routes" className="py-20 md:py-28 bg-[#030712]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="routes" className="relative overflow-hidden py-20 md:py-28 bg-[#030712]">
+      {/* Ambient art, parked in the gutter beside the centred heading */}
+      <RouteSchematic className="pointer-events-none select-none hidden lg:block absolute -left-10 xl:left-6 top-16 w-52 opacity-[0.13] animate-drift-tilt" />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <p className="text-emerald-500 text-xs font-semibold tracking-[0.2em] uppercase">
             Popular Routes

@@ -1,5 +1,6 @@
 import { Truck, Check } from "lucide-react";
 import type { FleetVehicle } from "@/lib/supabase/types";
+import FleetBlueprint from "@/components/graphics/FleetBlueprint";
 
 interface FleetGalleryProps {
   data: FleetVehicle[];
@@ -12,8 +13,11 @@ function bookingUrl(vehicle: string) {
 
 export default function FleetGallery({ data }: FleetGalleryProps) {
   return (
-    <section className="py-20 md:py-28 bg-[#030712]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative overflow-hidden py-20 md:py-28 bg-[#030712]">
+      {/* Ambient art, parked in the gutter beside the centred heading */}
+      <FleetBlueprint className="pointer-events-none select-none hidden lg:block absolute -right-16 xl:right-2 top-10 w-[30rem] opacity-[0.1] animate-drift" />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <p className="text-emerald-500 text-xs font-semibold tracking-[0.2em] uppercase">
             Our Fleet

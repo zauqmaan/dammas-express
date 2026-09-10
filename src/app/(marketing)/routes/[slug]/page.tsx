@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CheckCircle, MessageCircle, Truck } from "lucide-react";
 import { getRouteBySlug, getRoutes, getFleet } from "@/lib/data";
+import { prepareContentHtml } from "@/lib/content";
 
 interface RouteDetailPageProps {
   params: { slug: string };
@@ -184,7 +185,7 @@ export default async function RouteDetailPage({ params }: RouteDetailPageProps) 
               prose-a:text-emerald-400 prose-a:no-underline hover:prose-a:underline
               prose-li:text-gray-400
               prose-strong:text-white"
-              dangerouslySetInnerHTML={{ __html: route.content }}
+              dangerouslySetInnerHTML={{ __html: prepareContentHtml(route.content) }}
             />
           </div>
         </section>

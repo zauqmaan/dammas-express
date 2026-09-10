@@ -90,6 +90,119 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .ProseMirror ol { list-style: decimal; }
 .ProseMirror strong { color: white; }
 
+/* Tables inside the editor. prosemirror-tables renders each table through a
+   node view: a `.tableWrapper` div holding the table and a colgroup that carries
+   the dragged column widths. */
+.ProseMirror .tableWrapper { overflow-x: auto; margin: 1.25rem 0; }
+.ProseMirror table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin: 0;
+}
+.ProseMirror table td,
+.ProseMirror table th {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.5rem 0.75rem;
+  vertical-align: top;
+  position: relative;
+  min-width: 3rem;
+  color: #9CA3AF;
+}
+.ProseMirror table th {
+  background: rgba(255, 255, 255, 0.05);
+  color: #FFFFFF;
+  font-weight: 600;
+  text-align: left;
+}
+/* Cells hold full paragraphs; without this every row gains the paragraph margin. */
+.ProseMirror table td > p,
+.ProseMirror table th > p { margin: 0; }
+/* Cell selection highlight (drag across cells to merge, delete a column, etc.) */
+.ProseMirror .selectedCell:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(16, 185, 129, 0.15);
+  pointer-events: none;
+  z-index: 2;
+}
+.ProseMirror .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: -2px;
+  width: 4px;
+  background: #10B981;
+  pointer-events: none;
+  z-index: 20;
+}
+.ProseMirror.resize-cursor { cursor: col-resize; }
+
+/* Images inside the editor */
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+.ProseMirror img.ProseMirror-selectednode {
+  outline: 2px solid #10B981;
+  outline-offset: 2px;
+}
+.ProseMirror img[data-align="center"] { display: block; margin-left: auto; margin-right: auto; }
+.ProseMirror img[data-align="right"] { display: block; margin-left: auto; }
+.ProseMirror img[data-align="left"] { display: block; margin-right: auto; }
+
+/* Tables on the public pages. @tailwindcss/typography styles tables through
+   zero-specificity `:where()` selectors, so these plain class rules win.
+   `.table-scroll` is added around every table by prepareContentHtml(). */
+.prose .table-scroll {
+  overflow-x: auto;
+  margin: 1.75rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.75rem;
+}
+.prose .table-scroll > table {
+  margin: 0;
+  border-collapse: collapse;
+  width: 100%;
+  /* Roughly a phone's width: small tables still fit, wider ones scroll inside
+     the wrapper instead of collapsing into unreadable columns. */
+  min-width: 24rem;
+  font-size: 0.875rem;
+}
+.prose th,
+.prose td {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.625rem 0.875rem;
+  text-align: left;
+  vertical-align: top;
+}
+.prose th {
+  background: rgba(255, 255, 255, 0.04);
+  color: #F9FAFB;
+  font-weight: 600;
+}
+.prose td { color: #9CA3AF; }
+.prose td > p,
+.prose th > p { margin: 0; }
+/* The wrapper already draws the outer frame. */
+.prose .table-scroll > table tr > *:first-child { border-left: 0; }
+.prose .table-scroll > table tr > *:last-child { border-right: 0; }
+.prose .table-scroll > table tr:first-child > * { border-top: 0; }
+.prose .table-scroll > table tr:last-child > * { border-bottom: 0; }
+
+/* Images placed inside the content by the editor */
+.prose img {
+  border-radius: 0.75rem;
+  margin: 2rem 0;
+  height: auto;
+}
+.prose img[data-align="center"] { margin-left: auto; margin-right: auto; }
+.prose img[data-align="right"] { margin-left: auto; }
+.prose img[data-align="left"] { margin-right: auto; }
+
 /* Route Marquee Animation
    The track holds two identical copies of the route list and is sized with w-max,
    so -50% is exactly one copy: the seam is invisible and the loop never resets
@@ -102,4 +215,30 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .animate-marquee {
   animation: marquee 40s linear infinite;
   will-change: transform;
+}
+
+/* The ambient art carries no meaning, so drop it when the visitor has asked the
+   OS for reduced motion. The route marquee stays running — it's the section's
+   whole point, and stopping it left visitors with reduced motion enabled
+   staring at a static strip. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-drift,
+  .animate-drift-tilt,
+  .animate-bounce-subtle,
+  .animate-dash-flow,
+  .animate-ripple,
+  .animate-pulse-soft,
+  .animate-spin-slow,
+  .animate-sway-x {
+    animation: none;
+  }
+}
+
+/* The ripple rings are mid-animation at rest, so switching the animation off
+   would leave them frozen at full size and full opacity — brighter than the
+   art around them. Hide them instead. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-ripple {
+    opacity: 0;
+  }
 }

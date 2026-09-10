@@ -14,6 +14,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import type { Service } from "@/lib/supabase/types";
+import MonthlyPass from "@/components/graphics/MonthlyPass";
 
 interface ServicesProps {
   data: Service[];
@@ -52,8 +53,11 @@ function bookingUrl(serviceName: string) {
 
 export default function Services({ data }: ServicesProps) {
   return (
-    <section id="services" className="py-20 md:py-28 bg-[#030712]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="services" className="relative overflow-hidden py-20 md:py-28 bg-[#030712]">
+      {/* Ambient art, parked in the gutter beside the centred heading */}
+      <MonthlyPass className="pointer-events-none select-none hidden lg:block absolute -left-12 xl:left-4 top-14 w-80 opacity-[0.11] animate-drift" />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <p className="text-emerald-500 text-xs font-semibold tracking-[0.2em] uppercase">
             Our Services

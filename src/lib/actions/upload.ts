@@ -1,6 +1,7 @@
 'use server'
 
 import { adminSupabase } from '@/lib/supabase/admin'
+import { requireSession } from '@/lib/auth'
 
 const BUCKET = 'images'
 
@@ -16,6 +17,11 @@ async function ensurePublicBucket() {
 }
 
 export async function uploadImage(file: File): Promise<string | null> {
+  // The editor calls this straight from the browser when an image is added to
+  // post content, so the login check has to live here too — not only in the
+  // actions that wrap it.
+  await requireSession()
+
   await ensurePublicBucket()
 
   const fileExt = file.name.split('.').pop()

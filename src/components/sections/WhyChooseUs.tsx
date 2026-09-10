@@ -1,4 +1,5 @@
 import { Truck, MapPin, ShieldCheck, Clock, type LucideIcon } from "lucide-react";
+import ShiftDial from "@/components/graphics/ShiftDial";
 
 const FEATURES: {
   Icon: LucideIcon;
@@ -43,8 +44,11 @@ const FEATURES: {
 
 export default function WhyChooseUs() {
   return (
-    <section className="py-20 md:py-28 bg-[#030712]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative overflow-hidden py-20 md:py-28 bg-[#030712]">
+      {/* Ambient art, parked in the gutter beside the centred heading */}
+      <ShiftDial className="pointer-events-none select-none hidden lg:block absolute -right-16 xl:right-4 top-8 w-[26rem] opacity-[0.09] animate-drift" />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <p className="text-emerald-500 text-xs font-semibold tracking-[0.2em] uppercase">
             Why Dammas Express

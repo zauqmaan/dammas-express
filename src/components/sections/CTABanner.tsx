@@ -1,4 +1,5 @@
 import { MessageCircle, Phone } from "lucide-react";
+import SignalHub from "@/components/graphics/SignalHub";
 
 const WHATSAPP_URL =
   "https://wa.me/971566625302?text=Hi%2C%20I%20want%20to%20book%20a%20ride";
@@ -12,6 +13,11 @@ export default function CTABanner() {
             className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl"
             aria-hidden="true"
           />
+
+          {/* Ambient art: the hub broadcasting, one in each bottom corner so the
+              centred copy keeps a clear column between them */}
+          <SignalHub className="pointer-events-none select-none hidden lg:block absolute -left-20 -bottom-24 w-96 opacity-[0.12]" />
+          <SignalHub className="pointer-events-none select-none hidden xl:block absolute -right-24 -top-20 w-80 opacity-[0.08] animate-drift" />
 
           <div className="relative">
             <p className="text-emerald-400 text-xs font-semibold tracking-[0.2em] uppercase">

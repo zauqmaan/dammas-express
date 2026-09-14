@@ -198,8 +198,10 @@ export default function ServicesPage() {
 
             <form onSubmit={handleSubmit} className="p-6 space-y-5">
               <div>
-                <label className="block text-gray-400 text-sm mb-1.5">Service Title</label>
+                <label htmlFor="service-title" className="block text-gray-400 text-sm mb-1.5">Service Title</label>
                 <input
+                  id="service-title"
+                  name="title"
                   type="text"
                   value={form.title}
                   onChange={(e) => handleTitleChange(e.target.value)}
@@ -209,8 +211,10 @@ export default function ServicesPage() {
               </div>
 
               <div>
-                <label className="block text-gray-400 text-sm mb-1.5">URL Slug</label>
+                <label htmlFor="service-slug" className="block text-gray-400 text-sm mb-1.5">URL Slug</label>
                 <input
+                  id="service-slug"
+                  name="slug"
                   type="text"
                   value={form.slug}
                   onChange={(e) => setForm((prev) => ({ ...prev, slug: e.target.value }))}
@@ -220,8 +224,10 @@ export default function ServicesPage() {
               </div>
 
               <div>
-                <label className="block text-gray-400 text-sm mb-1.5">Icon Name (Lucide)</label>
+                <label htmlFor="service-icon" className="block text-gray-400 text-sm mb-1.5">Icon Name (Lucide)</label>
                 <input
+                  id="service-icon"
+                  name="icon_name"
                   type="text"
                   value={form.icon_name}
                   onChange={(e) => setForm((prev) => ({ ...prev, icon_name: e.target.value }))}
@@ -232,8 +238,10 @@ export default function ServicesPage() {
               </div>
 
               <div>
-                <label className="block text-gray-400 text-sm mb-1.5">Description</label>
+                <label htmlFor="service-description" className="block text-gray-400 text-sm mb-1.5">Description</label>
                 <textarea
+                  id="service-description"
+                  name="description"
                   value={form.description}
                   onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
                   required
@@ -243,8 +251,10 @@ export default function ServicesPage() {
               </div>
 
               <div>
-                <label className="block text-gray-400 text-sm mb-1.5">Features (comma separated)</label>
+                <label htmlFor="service-features" className="block text-gray-400 text-sm mb-1.5">Features (comma separated)</label>
                 <input
+                  id="service-features"
+                  name="features"
                   type="text"
                   value={form.features}
                   onChange={(e) => setForm((prev) => ({ ...prev, features: e.target.value }))}

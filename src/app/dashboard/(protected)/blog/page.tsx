@@ -226,8 +226,10 @@ export default function BlogPage() {
 
             <form onSubmit={handleSubmit} className="p-6 space-y-5">
               <div>
-                <label className="block text-gray-400 text-sm mb-1.5">Title</label>
+                <label htmlFor="post-title" className="block text-gray-400 text-sm mb-1.5">Title</label>
                 <input
+                  id="post-title"
+                  name="title"
                   type="text"
                   value={form.title}
                   onChange={(e) => handleTitleChange(e.target.value)}
@@ -237,8 +239,10 @@ export default function BlogPage() {
               </div>
 
               <div>
-                <label className="block text-gray-400 text-sm mb-1.5">URL Slug</label>
+                <label htmlFor="post-slug" className="block text-gray-400 text-sm mb-1.5">URL Slug</label>
                 <input
+                  id="post-slug"
+                  name="slug"
                   type="text"
                   value={form.slug}
                   onChange={(e) => setForm((prev) => ({ ...prev, slug: e.target.value }))}
@@ -248,8 +252,10 @@ export default function BlogPage() {
               </div>
 
               <div>
-                <label className="block text-gray-400 text-sm mb-1.5">Category</label>
+                <label htmlFor="post-category" className="block text-gray-400 text-sm mb-1.5">Category</label>
                 <input
+                  id="post-category"
+                  name="category"
                   type="text"
                   value={form.category}
                   onChange={(e) => setForm((prev) => ({ ...prev, category: e.target.value }))}
@@ -260,8 +266,10 @@ export default function BlogPage() {
               </div>
 
               <div>
-                <label className="block text-gray-400 text-sm mb-1.5">Excerpt</label>
+                <label htmlFor="post-excerpt" className="block text-gray-400 text-sm mb-1.5">Excerpt</label>
                 <textarea
+                  id="post-excerpt"
+                  name="excerpt"
                   value={form.excerpt}
                   onChange={(e) => setForm((prev) => ({ ...prev, excerpt: e.target.value }))}
                   required
@@ -271,14 +279,25 @@ export default function BlogPage() {
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300">Content</label>
+              {/* A <label for> can't target the TipTap editor — it's a
+                  contenteditable div, not a labellable form control — so the
+                  wrapper is named as a group instead. */}
+              <div
+                role="group"
+                aria-labelledby="post-content-label"
+                className="space-y-2"
+              >
+                <span id="post-content-label" className="block text-sm font-medium text-gray-300">
+                  Content
+                </span>
                 <RichTextEditor content={content} onChange={(html) => setContent(html)} />
               </div>
 
               <div>
-                <label className="block text-gray-400 text-sm mb-1.5">Cover Image</label>
+                <label htmlFor="post-cover" className="block text-gray-400 text-sm mb-1.5">Cover Image</label>
                 <input
+                  id="post-cover"
+                  name="coverImage"
                   type="file"
                   accept="image/*"
                   onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}

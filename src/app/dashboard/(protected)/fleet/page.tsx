@@ -224,8 +224,10 @@ export default function FleetPage() {
 
             <form onSubmit={handleSubmit} className="p-6 space-y-5">
               <div>
-                <label className="block text-gray-400 text-sm mb-1.5">Vehicle Name</label>
+                <label htmlFor="fleet-name" className="block text-gray-400 text-sm mb-1.5">Vehicle Name</label>
                 <input
+                  id="fleet-name"
+                  name="name"
                   type="text"
                   value={form.name}
                   onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
@@ -235,8 +237,10 @@ export default function FleetPage() {
               </div>
 
               <div>
-                <label className="block text-gray-400 text-sm mb-1.5">Type</label>
+                <label htmlFor="fleet-type" className="block text-gray-400 text-sm mb-1.5">Type</label>
                 <input
+                  id="fleet-type"
+                  name="type"
                   type="text"
                   value={form.type}
                   onChange={(e) => setForm((prev) => ({ ...prev, type: e.target.value }))}
@@ -247,8 +251,10 @@ export default function FleetPage() {
               </div>
 
               <div>
-                <label className="block text-gray-400 text-sm mb-1.5">Description</label>
+                <label htmlFor="fleet-description" className="block text-gray-400 text-sm mb-1.5">Description</label>
                 <textarea
+                  id="fleet-description"
+                  name="description"
                   value={form.description}
                   onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
                   required
@@ -258,8 +264,10 @@ export default function FleetPage() {
               </div>
 
               <div>
-                <label className="block text-gray-400 text-sm mb-1.5">Passengers</label>
+                <label htmlFor="fleet-passengers" className="block text-gray-400 text-sm mb-1.5">Passengers</label>
                 <input
+                  id="fleet-passengers"
+                  name="passengers"
                   type="text"
                   value={form.passengers}
                   onChange={(e) => setForm((prev) => ({ ...prev, passengers: e.target.value }))}
@@ -270,8 +278,10 @@ export default function FleetPage() {
               </div>
 
               <div>
-                <label className="block text-gray-400 text-sm mb-1.5">Luggage</label>
+                <label htmlFor="fleet-luggage" className="block text-gray-400 text-sm mb-1.5">Luggage</label>
                 <input
+                  id="fleet-luggage"
+                  name="luggage"
                   type="text"
                   value={form.luggage}
                   onChange={(e) => setForm((prev) => ({ ...prev, luggage: e.target.value }))}
@@ -282,8 +292,10 @@ export default function FleetPage() {
               </div>
 
               <div>
-                <label className="block text-gray-400 text-sm mb-1.5">Features (comma separated)</label>
+                <label htmlFor="fleet-features" className="block text-gray-400 text-sm mb-1.5">Features (comma separated)</label>
                 <input
+                  id="fleet-features"
+                  name="features"
                   type="text"
                   value={form.features}
                   onChange={(e) => setForm((prev) => ({ ...prev, features: e.target.value }))}
@@ -293,8 +305,10 @@ export default function FleetPage() {
               </div>
 
               <div>
-                <label className="block text-gray-400 text-sm mb-1.5">Vehicle Image</label>
+                <label htmlFor="fleet-image" className="block text-gray-400 text-sm mb-1.5">Vehicle Image</label>
                 <input
+                  id="fleet-image"
+                  name="vehicleImage"
                   type="file"
                   accept="image/*"
                   onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}

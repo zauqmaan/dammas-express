@@ -1,6 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import DamasExpressJsonLd from "@/components/seo/JsonLd";
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
+import {
+  BRAND_SUFFIX,
+  BUSINESS,
+  HOME_DESCRIPTION,
+  HOME_TITLE,
+  OG_IMAGE,
+  SITE_URL,
+} from "@/lib/seo";
 import "./globals.css";
 
 const inter = Inter({
@@ -10,13 +19,14 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://dammasexpress.ae"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Al Quoz Car Lift Services & Staff Transport Service | Dammas Express",
-    template: "%s | Dammas Express",
+    // 58 chars — inside the ~60 the SERP shows on a narrow phone, with the
+    // distinctive words ("Al Quoz Car Lift") first so they survive truncation.
+    default: HOME_TITLE,
+    template: `%s${BRAND_SUFFIX}`,
   },
-  description:
-    "Affordable car lift services to Al Quoz from Deira, Bur Dubai, Karama, Rigga & Abuhail. Monthly passes for AED 250-300. Morning & Evening shifts available.",
+  description: HOME_DESCRIPTION,
   keywords: [
     "al quoz car lift",
     "car lift to al quoz",
@@ -27,11 +37,23 @@ export const metadata: Metadata = {
     "al quoz staff transport",
     "dammas express",
   ],
+  // The homepage's own canonical. Every other public route sets its own via
+  // pageMetadata() in src/lib/seo.ts.
+  alternates: { canonical: "/" },
   openGraph: {
-    url: "https://dammasexpress.ae",
-    title: "Al Quoz Car Lift Services | Dammas Express",
-    description:
-      "Daily and monthly car lift services to Al Quoz. Starting from AED 250/month.",
+    type: "website",
+    url: SITE_URL,
+    siteName: BUSINESS.name,
+    locale: "en_AE",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+    images: [OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+    images: [OG_IMAGE],
   },
 };
 
@@ -49,6 +71,7 @@ export default function RootLayout({
       <body className="bg-background font-sans antialiased">
         <DamasExpressJsonLd />
         {children}
+        <GoogleAnalytics />
       </body>
     </html>
   );

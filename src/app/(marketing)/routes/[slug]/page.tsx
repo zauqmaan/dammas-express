@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { CheckCircle, MessageCircle, Truck } from "lucide-react";
 import { getRouteBySlug, getRoutes, getFleet } from "@/lib/data";
 import { prepareContentHtml } from "@/lib/content";
+import { BRAND_SUFFIX, HOURS, pageMetadata } from "@/lib/seo";
 
 interface RouteDetailPageProps {
   params: { slug: string };
@@ -31,15 +32,28 @@ export async function generateMetadata({
   params,
 }: RouteDetailPageProps): Promise<Metadata> {
   const route = await getRouteBySlug(params.slug);
-  if (!route) return { title: "Route Not Found" };
-  return {
-    title:
-      route.meta_title ||
-      `Deira Car Lift & Transport from ${route.from_location} to Al Quoz | Dammas Express`,
+  if (!route) return { title: "Route Not Found", robots: { index: false } };
+
+  // The root layout's title template appends the brand, but the dashboard's
+  // meta_title placeholder ends with it too — strip it so editors who follow
+  // the placeholder don't end up with "… | Dammas Express | Dammas Express".
+  // A plain suffix check rather than a regex: BRAND_SUFFIX contains a "|",
+  // which would be read as alternation and match nearly anything.
+  const rawTitle = route.meta_title?.trim();
+  const metaTitle =
+    rawTitle && rawTitle.toLowerCase().endsWith(BRAND_SUFFIX.toLowerCase())
+      ? rawTitle.slice(0, -BRAND_SUFFIX.length).trim()
+      : rawTitle;
+
+  return pageMetadata({
+    // The fallback used to hardcode "Deira" for every route, so a Bur Dubai
+    // route rendered "Deira Car Lift & Transport from Bur Dubai to Al Quoz".
+    title: metaTitle || `Car Lift from ${route.from_location} to Al Quoz, Dubai`,
     description:
       route.meta_description ||
       `Affordable daily and monthly car lift from ${route.from_location} to Al Quoz Industrial Area. Book via WhatsApp!`,
-  };
+    path: `/routes/${params.slug}`,
+  });
 }
 
 export default async function RouteDetailPage({ params }: RouteDetailPageProps) {
@@ -62,13 +76,13 @@ export default async function RouteDetailPage({ params }: RouteDetailPageProps) 
     },
     {
       title: "Morning & Evening Windows",
-      value: "Morning: 7:00 AM – 10:00 AM",
-      note: "Evening: 5:00 PM – 8:00 PM",
+      value: `Morning: ${HOURS.morning}`,
+      note: `Evening: ${HOURS.evening}`,
     },
     {
       title: "Operational Days",
-      value: "Saturday to Thursday",
-      note: "Aligned with industrial shifts",
+      value: HOURS.serviceDays,
+      note: `Book any time — enquiries answered ${HOURS.contact}`,
     },
     {
       title: "Premium Assigned Fleet",

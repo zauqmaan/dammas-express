@@ -12,10 +12,14 @@ import Contact from "@/components/sections/Contact";
 import { getServices, getRoutes, getFleet, getPublishedPosts } from "@/lib/data";
 
 export default async function Home() {
-  const services = await getServices();
-  const routes = await getRoutes();
-  const fleet = await getFleet();
-  const posts = await getPublishedPosts();
+  // Independent queries — run them together rather than in series, which cost
+  // four sequential Supabase round trips before the page could start rendering.
+  const [services, routes, fleet, posts] = await Promise.all([
+    getServices(),
+    getRoutes(),
+    getFleet(),
+    getPublishedPosts(),
+  ]);
 
   return (
     <main id="home">

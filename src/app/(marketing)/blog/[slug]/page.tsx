@@ -6,6 +6,7 @@ import BlogCard from "@/components/ui/BlogCard";
 import { getPostBySlug, getPublishedPosts, getRelatedPosts } from "@/lib/data";
 import { prepareContentHtml } from "@/lib/content";
 import { formatDate } from "@/lib/format";
+import { pageMetadata } from "@/lib/seo";
 
 interface BlogArticlePageProps {
   params: { slug: string };
@@ -23,17 +24,17 @@ export async function generateMetadata({
   params,
 }: BlogArticlePageProps): Promise<Metadata> {
   const post = await getPostBySlug(params.slug);
-  if (!post) return { title: "Post Not Found" };
-  return {
+  if (!post) return { title: "Post Not Found", robots: { index: false } };
+
+  return pageMetadata({
     title: post.title,
     description: post.excerpt,
-    openGraph: {
-      title: post.title,
-      description: post.excerpt,
-      type: "article",
-      publishedTime: post.created_at,
-    },
-  };
+    path: `/blog/${params.slug}`,
+    type: "article",
+    publishedTime: post.created_at,
+    // Falls back to the site-wide OG card when the post has no cover image.
+    images: post.image_url ? [post.image_url] : undefined,
+  });
 }
 
 export default async function BlogArticlePage({ params }: BlogArticlePageProps) {

@@ -1,13 +1,14 @@
-import type { Metadata } from "next";
 import { Car, CalendarRange, Plane, Building2, Truck, CheckCircle2, type LucideIcon } from "lucide-react";
 import PageHero from "@/components/sections/PageHero";
 import { getServices } from "@/lib/data";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Transport Services to Al Quoz",
+export const metadata = pageMetadata({
+  title: "Car Lift & Staff Transport, Al Quoz Dubai",
   description:
     "Staff pick & drop, tours, and party pick & drop services to Al Quoz, Dubai.",
-};
+  path: "/services",
+});
 
 const iconMap: Record<string, LucideIcon> = {
   Car,
@@ -28,7 +29,7 @@ export default async function ServicesPage() {
   return (
     <>
       <PageHero
-        title="Our Services"
+        title="Car Lift & Staff Transport Services in Al Quoz"
         description="Reliable, safe, and affordable transportation solutions tailored for your needs across the UAE."
         currentPage="Services"
       />

@@ -634,12 +634,16 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
         onInsertImage={() => fileInputRef.current?.click()}
       />
       <EditorContent editor={editor} />
+      {/* Never focused directly — the toolbar button opens it — but it still
+          needs a name for the accessibility tree. */}
       <input
         ref={fileInputRef}
         type="file"
         accept="image/*"
         multiple
         onChange={handleFilesSelected}
+        aria-label="Insert images into the editor"
+        tabIndex={-1}
         className="hidden"
       />
       <p className="border-t border-white/5 px-4 py-2 text-[11px] text-gray-600">

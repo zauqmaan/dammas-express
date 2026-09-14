@@ -1,14 +1,15 @@
-import type { Metadata } from "next";
 import { MessageCircle } from "lucide-react";
 import PageHero from "@/components/sections/PageHero";
 import RouteCard from "@/components/ui/RouteCard";
 import { getRoutes } from "@/lib/data";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Car Lift Routes to Al Quoz",
+export const metadata = pageMetadata({
+  title: "Car Lift Routes to Al Quoz, Dubai",
   description:
     "Fixed monthly pricing for car lift routes from Deira, Rigga, Bur Dubai, Karama, and Sharaf DG to Al Quoz.",
-};
+  path: "/routes",
+});
 
 const STEPS = [
   {
@@ -34,7 +35,7 @@ export default async function RoutesPage() {
   return (
     <>
       <PageHero
-        title="Our Routes"
+        title="Car Lift Routes to Al Quoz, Dubai"
         description="Transparent, fixed pricing across Dubai. No hidden fees, no surprises — just reliable rides."
         currentPage="Routes"
       />

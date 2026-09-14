@@ -3,13 +3,19 @@
 //
 // Every value here mirrors what the site actually shows — keep them in sync:
 // a NAP mismatch between the visible page and the markup hurts local ranking.
-// Sources: name/tagline Footer.tsx, description layout.tsx metadata, address
-// Contact.tsx OFFICE_ADDRESS, shift times Hero.tsx TRUST_ITEMS, pickup areas
-// RouteMarquee.tsx.
+// The name, address, phone and email now come from BUSINESS in src/lib/seo.ts,
+// which is the same object the Footer and Contact section render, so the three
+// can no longer drift apart. Shift times come from Hero.tsx TRUST_ITEMS and
+// pickup areas from RouteMarquee.tsx.
 
-const SITE_URL = "https://dammasexpress.ae";
+import {
+  BUSINESS,
+  HOME_DESCRIPTION,
+  SERVICE_DAYS,
+  SERVICE_WINDOWS,
+  SITE_URL,
+} from "@/lib/seo";
 
-// Both shifts run every day; trim these once a non-operating day is confirmed.
 const ALL_DAYS = [
   "Monday",
   "Tuesday",
@@ -23,13 +29,12 @@ const ALL_DAYS = [
 const schema = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
-  name: "Dammas Express",
-  alternateName: "DAMMAS EXPRESS UAE",
-  description:
-    "Affordable car lift services to Al Quoz from Deira, Bur Dubai, Karama, Rigga & Abuhail. Monthly passes for AED 250-300. Morning & Evening shifts available.",
+  name: BUSINESS.name,
+  alternateName: BUSINESS.legalName,
+  description: HOME_DESCRIPTION,
   url: SITE_URL,
-  telephone: "+971566625302",
-  email: "Ehsanch112@gmail.com",
+  telephone: BUSINESS.phone,
+  email: BUSINESS.email,
   logo: `${SITE_URL}/images/logo.png`,
   // Only the .jpg/.jpeg banners — Google does not reliably decode the .jfif
   // hero slides.
@@ -39,10 +44,10 @@ const schema = {
   ],
   address: {
     "@type": "PostalAddress",
-    streetAddress: "Al Falasi Building, 2nd Floor, Office 201",
-    addressLocality: "Dubai",
-    addressRegion: "Dubai",
-    addressCountry: "AE",
+    streetAddress: BUSINESS.streetAddress,
+    addressLocality: BUSINESS.locality,
+    addressRegion: BUSINESS.region,
+    addressCountry: BUSINESS.countryCode,
   },
   areaServed: [
     { "@type": "City", name: "Dubai" },
@@ -56,27 +61,48 @@ const schema = {
     { "@type": "Place", name: "Al Karama" },
     { "@type": "Place", name: "Burjuman" },
   ],
+  // When the vehicles actually run: two fixed windows, weekdays only. This is
+  // deliberately narrower than the contact point below — enquiries are answered
+  // any time, but no route operates at the weekend.
   openingHoursSpecification: [
     {
       "@type": "OpeningHoursSpecification",
-      dayOfWeek: ALL_DAYS,
-      opens: "07:00",
-      closes: "10:00",
+      dayOfWeek: [...SERVICE_DAYS],
+      opens: SERVICE_WINDOWS.morning.opens,
+      closes: SERVICE_WINDOWS.morning.closes,
       description: "Morning Shift",
     },
     {
       "@type": "OpeningHoursSpecification",
-      dayOfWeek: ALL_DAYS,
-      opens: "17:00",
-      closes: "20:00",
+      dayOfWeek: [...SERVICE_DAYS],
+      opens: SERVICE_WINDOWS.evening.opens,
+      closes: SERVICE_WINDOWS.evening.closes,
       description: "Evening Shift",
     },
   ],
+  // Bookings and enquiries are answered around the clock, every day, which is a
+  // different thing from when the vehicles run.
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer service",
+    telephone: BUSINESS.phone,
+    email: BUSINESS.email,
+    areaServed: "AE",
+    availableLanguage: ["en", "ar", "ur", "hi"],
+    hoursAvailable: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ALL_DAYS,
+      opens: "00:00",
+      closes: "23:59",
+    },
+  },
   priceRange: "AED 250 - AED 300 / month",
   currenciesAccepted: "AED",
-  // WhatsApp is the only real profile today — the Footer socials are still
-  // href="#" placeholders. Add them here once they point somewhere.
-  sameAs: ["https://wa.me/971566625302"],
+  // WhatsApp is the only profile the business actually maintains. The Footer
+  // used to render four href="#" placeholder icons; those have been removed
+  // rather than left pointing nowhere. Add real Facebook/Instagram URLs to both
+  // this array and SOCIALS in Footer.tsx when the accounts exist.
+  sameAs: [BUSINESS.whatsapp],
 };
 
 export default function DamasExpressJsonLd() {

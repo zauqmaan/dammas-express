@@ -1,6 +1,7 @@
 "use client";
 
-const WHATSAPP_URL = "https://wa.me/971566625302";
+import { BUSINESS } from "@/lib/seo";
+import { trackContactClick } from "@/lib/analytics";
 
 function WhatsAppIcon() {
   return (
@@ -16,14 +17,18 @@ export default function WhatsAppButton() {
       <span className="pointer-events-none absolute right-full mr-3 top-1/2 -translate-y-1/2 whitespace-nowrap bg-gray-900 text-white text-xs px-3 py-1.5 rounded-lg opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200">
         Chat with us
       </span>
-      <button
-        type="button"
+      {/* An anchor rather than a button + window.open: it is a navigation, so
+          it should be crawlable, middle-clickable and openable in a new tab. */}
+      <a
+        href={BUSINESS.whatsapp}
+        target="_blank"
+        rel="noopener noreferrer"
         aria-label="Chat with us on WhatsApp"
-        onClick={() => window.open(WHATSAPP_URL, "_blank")}
+        onClick={() => trackContactClick("whatsapp", "floating_button")}
         className="flex items-center justify-center w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#20BD5A] text-white shadow-lg shadow-[#25D366]/30 hover:scale-110 transition-transform duration-200"
       >
         <WhatsAppIcon />
-      </button>
+      </a>
     </div>
   );
 }

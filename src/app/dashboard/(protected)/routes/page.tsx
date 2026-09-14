@@ -235,8 +235,10 @@ export default function RoutesPage() {
             <form onSubmit={handleSubmit} className="p-6 space-y-5 overflow-y-auto">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-gray-400 text-sm mb-1.5">From Location</label>
+                  <label htmlFor="route-from" className="block text-gray-400 text-sm mb-1.5">From Location</label>
                   <input
+                    id="route-from"
+                    name="from_location"
                     type="text"
                     value={form.from_location}
                     onChange={(e) => setForm((prev) => ({ ...prev, from_location: e.target.value }))}
@@ -246,8 +248,10 @@ export default function RoutesPage() {
                 </div>
 
                 <div>
-                  <label className="block text-gray-400 text-sm mb-1.5">To Location</label>
+                  <label htmlFor="route-to" className="block text-gray-400 text-sm mb-1.5">To Location</label>
                   <input
+                    id="route-to"
+                    name="to_location"
                     type="text"
                     value={form.to_location}
                     onChange={(e) => setForm((prev) => ({ ...prev, to_location: e.target.value }))}
@@ -258,8 +262,10 @@ export default function RoutesPage() {
               </div>
 
               <div>
-                <label className="block text-gray-400 text-sm mb-1.5">Duration</label>
+                <label htmlFor="route-duration" className="block text-gray-400 text-sm mb-1.5">Duration</label>
                 <input
+                  id="route-duration"
+                  name="duration"
                   type="text"
                   value={form.duration}
                   onChange={(e) => setForm((prev) => ({ ...prev, duration: e.target.value }))}
@@ -271,8 +277,10 @@ export default function RoutesPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-gray-400 text-sm mb-1.5">One Way Price</label>
+                  <label htmlFor="route-price-one-way" className="block text-gray-400 text-sm mb-1.5">One Way Price</label>
                   <input
+                    id="route-price-one-way"
+                    name="price_one_way"
                     type="text"
                     value={form.price_one_way}
                     onChange={(e) => setForm((prev) => ({ ...prev, price_one_way: e.target.value }))}
@@ -283,8 +291,10 @@ export default function RoutesPage() {
                 </div>
 
                 <div>
-                  <label className="block text-gray-400 text-sm mb-1.5">Return Price</label>
+                  <label htmlFor="route-price-return" className="block text-gray-400 text-sm mb-1.5">Return Price</label>
                   <input
+                    id="route-price-return"
+                    name="price_return"
                     type="text"
                     value={form.price_return}
                     onChange={(e) => setForm((prev) => ({ ...prev, price_return: e.target.value }))}
@@ -295,8 +305,13 @@ export default function RoutesPage() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-gray-400 text-sm mb-1.5">Route Details &amp; SEO Content</label>
+              {/* A <label for> can't target the TipTap editor — it's a
+                  contenteditable div, not a labellable form control — so the
+                  wrapper is named as a group instead. */}
+              <div role="group" aria-labelledby="route-content-label">
+                <span id="route-content-label" className="block text-gray-400 text-sm mb-1.5">
+                  Route Details &amp; SEO Content
+                </span>
                 <RichTextEditor
                   content={form.content}
                   onChange={(content) => setForm((prev) => ({ ...prev, content }))}
@@ -304,8 +319,10 @@ export default function RoutesPage() {
               </div>
 
               <div>
-                <label className="block text-gray-400 text-sm mb-1.5">Pickup Zones</label>
+                <label htmlFor="route-pickup-zones" className="block text-gray-400 text-sm mb-1.5">Pickup Zones</label>
                 <textarea
+                  id="route-pickup-zones"
+                  name="pickup_zones"
                   value={form.pickup_zones}
                   onChange={(e) => setForm((prev) => ({ ...prev, pickup_zones: e.target.value }))}
                   rows={2}
@@ -315,8 +332,10 @@ export default function RoutesPage() {
               </div>
 
               <div>
-                <label className="block text-gray-400 text-sm mb-1.5">Drop-off Zones</label>
+                <label htmlFor="route-dropoff-zones" className="block text-gray-400 text-sm mb-1.5">Drop-off Zones</label>
                 <textarea
+                  id="route-dropoff-zones"
+                  name="dropoff_zones"
                   value={form.dropoff_zones}
                   onChange={(e) => setForm((prev) => ({ ...prev, dropoff_zones: e.target.value }))}
                   rows={2}
@@ -359,14 +378,25 @@ export default function RoutesPage() {
                             Remove
                           </button>
                         </div>
+                        {/* These were placeholder-only. The labels are visually
+                            hidden because the "FAQ n" heading above already
+                            carries the visible grouping. */}
+                        <label htmlFor={`route-faq-q-${index}`} className="sr-only">
+                          FAQ {index + 1} question
+                        </label>
                         <input
+                          id={`route-faq-q-${index}`}
                           type="text"
                           value={item.q}
                           onChange={(e) => updateFaq(index, 'q', e.target.value)}
                           placeholder="Question"
                           className="w-full bg-[#0F172A] border border-white/5 rounded-lg px-4 py-2.5 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50"
                         />
+                        <label htmlFor={`route-faq-a-${index}`} className="sr-only">
+                          FAQ {index + 1} answer
+                        </label>
                         <textarea
+                          id={`route-faq-a-${index}`}
                           value={item.a}
                           onChange={(e) => updateFaq(index, 'a', e.target.value)}
                           rows={2}
@@ -396,8 +426,10 @@ export default function RoutesPage() {
                 {showSeo && (
                   <div className="space-y-5 mt-4">
                     <div>
-                      <label className="block text-gray-400 text-sm mb-1.5">Meta Title</label>
+                      <label htmlFor="route-meta-title" className="block text-gray-400 text-sm mb-1.5">Meta Title</label>
                       <input
+                        id="route-meta-title"
+                        name="meta_title"
                         type="text"
                         value={form.meta_title}
                         onChange={(e) => setForm((prev) => ({ ...prev, meta_title: e.target.value }))}
@@ -407,8 +439,10 @@ export default function RoutesPage() {
                     </div>
 
                     <div>
-                      <label className="block text-gray-400 text-sm mb-1.5">Meta Description</label>
+                      <label htmlFor="route-meta-description" className="block text-gray-400 text-sm mb-1.5">Meta Description</label>
                       <textarea
+                        id="route-meta-description"
+                        name="meta_description"
                         value={form.meta_description}
                         onChange={(e) =>
                           setForm((prev) => ({ ...prev, meta_description: e.target.value }))

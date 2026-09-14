@@ -1,8 +1,11 @@
+"use client";
+
 import { MessageCircle, Phone } from "lucide-react";
 import SignalHub from "@/components/graphics/SignalHub";
+import { BUSINESS, SOCIAL_PROOF } from "@/lib/seo";
+import { trackContactClick } from "@/lib/analytics";
 
-const WHATSAPP_URL =
-  "https://wa.me/971566625302?text=Hi%2C%20I%20want%20to%20book%20a%20ride";
+const WHATSAPP_URL = `${BUSINESS.whatsapp}?text=Hi%2C%20I%20want%20to%20book%20a%20ride`;
 
 export default function CTABanner() {
   return (
@@ -27,8 +30,9 @@ export default function CTABanner() {
               Ready to Ride with Dubai&apos;s Most Trusted Transport?
             </h2>
             <p className="mt-5 text-gray-400 text-lg">
-              Join 500+ happy customers. Book your first ride or get a custom
-              quote in seconds.
+              Join {SOCIAL_PROOF.customers.value}
+              {SOCIAL_PROOF.customers.suffix} happy customers. Book your first
+              ride or get a custom quote in seconds.
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
@@ -36,13 +40,15 @@ export default function CTABanner() {
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackContactClick("whatsapp", "cta_banner")}
                 className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-xl font-semibold transition-all hover:shadow-lg hover:shadow-emerald-500/25"
               >
                 <MessageCircle size={20} />
                 Book Your Ride
               </a>
               <a
-                href="tel:+971566625302"
+                href={`tel:${BUSINESS.phone}`}
+                onClick={() => trackContactClick("phone", "cta_banner")}
                 className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white px-8 py-4 rounded-xl font-medium transition-all"
               >
                 <Phone size={20} />

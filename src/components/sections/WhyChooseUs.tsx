@@ -1,5 +1,6 @@
 import { Truck, MapPin, ShieldCheck, Clock, type LucideIcon } from "lucide-react";
 import ShiftDial from "@/components/graphics/ShiftDial";
+import { HOURS } from "@/lib/seo";
 
 const FEATURES: {
   Icon: LucideIcon;
@@ -38,7 +39,7 @@ const FEATURES: {
     iconColor: "text-amber-500",
     title: "Aligned Corporate Shift Timings",
     description:
-      "Perfect for commercial environments. Fixed morning shifts (7:00 AM to 10:00 AM) and evening returns (5:00 PM to 8:00 PM) guarantee you or your staff never clock in late.",
+      `Perfect for commercial environments. Fixed morning shifts (${HOURS.morning}) and evening returns (${HOURS.evening}), ${HOURS.serviceDays}, guarantee you or your staff never clock in late.`,
   },
 ];
 

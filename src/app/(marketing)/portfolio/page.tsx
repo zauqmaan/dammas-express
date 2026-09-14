@@ -1,17 +1,21 @@
-import type { Metadata } from "next";
 import { Truck, CheckCircle2 } from "lucide-react";
 import PageHero from "@/components/sections/PageHero";
 import { getFleet } from "@/lib/data";
+import { pageMetadata, SOCIAL_PROOF } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Our Fleet & Portfolio",
+export const metadata = pageMetadata({
+  title: "Our Fleet — Car Lift Vans, Al Quoz Dubai",
   description:
     "View our modern fleet including Toyota HiAce and Coaster vehicles available for daily and monthly rental.",
-};
+  path: "/portfolio",
+});
 
 const TRUST_BAR = [
-  { value: "50+ Vehicles", label: "Growing fleet across the UAE" },
-  { value: "24/7 Ready", label: "Dispatch never sleeps" },
+  {
+    value: `${SOCIAL_PROOF.vehicles.value}${SOCIAL_PROOF.vehicles.suffix} Vehicles`,
+    label: "Growing fleet across the UAE",
+  },
+  { value: "24/7 Booking", label: "Rides run Monday to Friday" },
   { value: "100% Insured", label: "Every vehicle, every trip" },
   { value: "RTA Licensed", label: "Fully compliant in Dubai" },
 ];
@@ -27,7 +31,7 @@ export default async function PortfolioPage() {
   return (
     <>
       <PageHero
-        title="Our Fleet & Portfolio"
+        title="Our Car Lift Fleet in Al Quoz, Dubai"
         description="A look at our modern, well-maintained vehicles ready to serve you across the UAE."
         currentPage="Portfolio"
       />

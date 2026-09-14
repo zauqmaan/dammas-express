@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import type { Service } from "@/lib/supabase/types";
 import MonthlyPass from "@/components/graphics/MonthlyPass";
+import { HOURS } from "@/lib/seo";
 
 interface ServicesProps {
   data: Service[];
@@ -30,7 +31,9 @@ const iconMap: Record<string, LucideIcon> = {
 
 const TRUST_PILLS = [
   "Professional RTA-Licensed Drivers",
-  "Flexible Scheduling",
+  // Was "Flexible Scheduling", which contradicted the fixed weekday shift
+  // windows stated everywhere else on the site.
+  `Fixed Shifts, ${HOURS.serviceDaysShort}`,
   "Corporate Solutions Available",
 ];
 

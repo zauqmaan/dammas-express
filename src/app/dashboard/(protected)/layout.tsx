@@ -1,7 +1,16 @@
+import type { Metadata } from 'next'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { verifySession } from '@/lib/auth'
 import SidebarNav from './_components/sidebar-nav'
+
+// robots.txt already disallows /dashboard/, but that only asks crawlers not to
+// fetch — a URL linked from elsewhere can still be indexed. This tag is what
+// actually keeps admin pages out of the index.
+export const metadata: Metadata = {
+  title: 'Dashboard',
+  robots: { index: false, follow: false },
+}
 
 export default async function DashboardLayout({
   children,

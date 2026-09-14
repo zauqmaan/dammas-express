@@ -1,6 +1,18 @@
+import { SOCIAL_PROOF } from "@/lib/seo";
+
 const STATS: { number: string; symbol: string; symbolColor: string; label: string }[] = [
-  { number: "50", symbol: "+", symbolColor: "text-emerald-500", label: "Happy Customers" },
-  { number: "5", symbol: "+", symbolColor: "text-emerald-500", label: "Fleet Vehicles" },
+  {
+    number: SOCIAL_PROOF.customers.value,
+    symbol: SOCIAL_PROOF.customers.suffix,
+    symbolColor: "text-emerald-500",
+    label: SOCIAL_PROOF.customers.label,
+  },
+  {
+    number: SOCIAL_PROOF.vehicles.value,
+    symbol: SOCIAL_PROOF.vehicles.suffix,
+    symbolColor: "text-emerald-500",
+    label: SOCIAL_PROOF.vehicles.label,
+  },
   { number: "5", symbol: "★", symbolColor: "text-amber-500", label: "Customer Rating" },
   { number: "2", symbol: "", symbolColor: "text-emerald-500", label: "Daily Shifts" },
 ];

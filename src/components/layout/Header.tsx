@@ -44,14 +44,23 @@ export default function Header() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
           <Link href="/" className="flex flex-col leading-tight">
-            <img src="/images/logo.png" alt="Dammas Express" className="h-9 w-auto h-[65px]" />
+            {/* Explicit width/height so the bar doesn't reflow once the logo
+                loads. The class list previously carried both h-9 and h-[65px]. */}
+            <img
+              src="/images/logo.png"
+              alt="Dammas Express"
+              width={160}
+              height={65}
+              className="h-[65px] w-auto"
+            />
           </Link>
 
-          <nav className="hidden md:flex items-center gap-8">
+          <nav aria-label="Main" className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
+                aria-current={isActive(link.href) ? "page" : undefined}
                 className={`text-sm transition-colors ${
                   isActive(link.href)
                     ? "font-bold text-white"
@@ -65,7 +74,7 @@ export default function Header() {
 
           <div className="flex items-center gap-3">
             <Link
-              href="/contact"
+              href="/booking"
               className="hidden sm:inline-flex bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2.5 rounded-lg font-medium text-sm transition-all"
             >
               Book Now
@@ -109,12 +118,13 @@ export default function Header() {
               <X size={22} />
             </button>
           </div>
-          <nav className="flex flex-col px-6 py-8 gap-6">
+          <nav aria-label="Mobile" className="flex flex-col px-6 py-8 gap-6">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
+                aria-current={isActive(link.href) ? "page" : undefined}
                 className={`text-base transition-colors ${
                   isActive(link.href)
                     ? "font-bold text-white"
@@ -125,7 +135,7 @@ export default function Header() {
               </Link>
             ))}
             <Link
-              href="/contact"
+              href="/booking"
               onClick={() => setMenuOpen(false)}
               className="mt-2 inline-flex justify-center bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2.5 rounded-lg font-medium text-sm transition-all"
             >

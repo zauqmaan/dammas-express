@@ -1,19 +1,20 @@
-import type { Metadata } from "next";
 import PageHero from "@/components/sections/PageHero";
 import Contact from "@/components/sections/Contact";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Contact Us",
+export const metadata = pageMetadata({
+  title: "Contact — Car Lift to Al Quoz, Dubai",
   description:
-    "Book your car lift to Al Quoz or get in touch with Dammas Express. Call, WhatsApp, or send us your pickup details — available 24/7 across the UAE.",
-};
+    "Get in touch with Dammas Express any time — we answer calls and WhatsApp 24/7. Car lift routes to Al Quoz run Monday to Friday, morning and evening shifts.",
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (
     <>
       <PageHero
-        title="Contact Us"
-        description="Tell us where you need to go and we'll get back to you instantly on WhatsApp. Available 24/7 across all Emirates."
+        title="Contact Dammas Express — Car Lift in Al Quoz, Dubai"
+        description="Tell us where you need to go and we'll get back to you instantly on WhatsApp — we're reachable 24/7, any day. Rides run Monday to Friday, morning and evening shifts."
         currentPage="Contact"
       />
 

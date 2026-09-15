@@ -5,6 +5,8 @@ import { Plus, Pencil, Trash2, X, FileText } from 'lucide-react'
 import RichTextEditor from '@/components/dashboard/RichTextEditor'
 import type { BlogPost } from '@/lib/supabase/types'
 import { addPost, updatePost, deletePost, togglePublished } from '@/lib/actions/blog'
+import { runDashboardAction } from '../_components/report-action-error'
+import { loadList } from '../_components/load-list'
 import { formatDate } from '@/lib/format'
 
 const emptyForm = {
@@ -32,13 +34,20 @@ export default function BlogPage() {
   const [content, setContent] = useState('')
   const [saving, setSaving] = useState(false)
   const [imageFile, setImageFile] = useState<File | null>(null)
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   async function fetchPosts() {
     setLoading(true)
-    const res = await fetch('/api/blog')
-    const data = await res.json()
-    setPosts(data ?? [])
-    setLoading(false)
+    setLoadError(null)
+    try {
+      setPosts(await loadList<BlogPost>('/api/blog'))
+    } catch (err) {
+      console.error(err)
+      setPosts([])
+      setLoadError(err instanceof Error ? err.message : 'Could not load posts.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -98,26 +107,25 @@ export default function BlogPage() {
       formData.set('image', imageFile)
     }
 
-    if (editingPost) {
-      await updatePost(editingPost.id, formData)
-    } else {
-      await addPost(formData)
-    }
-
+    // On failure the modal stays open with the entered values intact, so the
+    // save can be retried without retyping the post.
+    const ok = await runDashboardAction(() =>
+      editingPost ? updatePost(editingPost.id, formData) : addPost(formData)
+    )
     setSaving(false)
+    if (!ok) return
+
     closeModal()
     fetchPosts()
   }
 
   async function handleDelete(id: string) {
     if (!confirm('Are you sure you want to delete this post?')) return
-    await deletePost(id)
-    fetchPosts()
+    if (await runDashboardAction(() => deletePost(id))) fetchPosts()
   }
 
   async function handleTogglePublished(id: string, isPublished: boolean) {
-    await togglePublished(id, isPublished)
-    fetchPosts()
+    if (await runDashboardAction(() => togglePublished(id, isPublished))) fetchPosts()
   }
 
   return (
@@ -150,6 +158,12 @@ export default function BlogPage() {
               <tr>
                 <td colSpan={6} className="px-6 py-8 text-center text-gray-500 text-sm">
                   Loading posts...
+                </td>
+              </tr>
+            ) : loadError ? (
+              <tr>
+                <td colSpan={6} className="px-6 py-8 text-center text-red-400 text-sm">
+                  {loadError}
                 </td>
               </tr>
             ) : posts.length === 0 ? (

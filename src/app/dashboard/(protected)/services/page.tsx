@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { Plus, Pencil, Trash2, X } from 'lucide-react'
 import type { Service } from '@/lib/supabase/types'
 import { addService, updateService, deleteService, toggleServiceStatus } from '@/lib/actions/services'
+import { runDashboardAction } from '../_components/report-action-error'
+import { loadList } from '../_components/load-list'
 
 const emptyForm = {
   title: '',
@@ -28,13 +30,20 @@ export default function ServicesPage() {
   const [editingService, setEditingService] = useState<Service | null>(null)
   const [form, setForm] = useState(emptyForm)
   const [saving, setSaving] = useState(false)
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   async function fetchServices() {
     setLoading(true)
-    const res = await fetch('/api/services')
-    const data = await res.json()
-    setServices(data ?? [])
-    setLoading(false)
+    setLoadError(null)
+    try {
+      setServices(await loadList<Service>('/api/services'))
+    } catch (err) {
+      console.error(err)
+      setServices([])
+      setLoadError(err instanceof Error ? err.message : 'Could not load services.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -84,26 +93,23 @@ export default function ServicesPage() {
     formData.set('icon_name', form.icon_name)
     formData.set('features', form.features)
 
-    if (editingService) {
-      await updateService(editingService.id, formData)
-    } else {
-      await addService(formData)
-    }
-
+    const ok = await runDashboardAction(() =>
+      editingService ? updateService(editingService.id, formData) : addService(formData)
+    )
     setSaving(false)
+    if (!ok) return
+
     closeModal()
     fetchServices()
   }
 
   async function handleDelete(id: string) {
     if (!confirm('Are you sure you want to delete this service?')) return
-    await deleteService(id)
-    fetchServices()
+    if (await runDashboardAction(() => deleteService(id))) fetchServices()
   }
 
   async function handleToggleStatus(id: string, isActive: boolean) {
-    await toggleServiceStatus(id, isActive)
-    fetchServices()
+    if (await runDashboardAction(() => toggleServiceStatus(id, isActive))) fetchServices()
   }
 
   return (
@@ -135,6 +141,12 @@ export default function ServicesPage() {
               <tr>
                 <td colSpan={5} className="px-6 py-8 text-center text-gray-500 text-sm">
                   Loading services...
+                </td>
+              </tr>
+            ) : loadError ? (
+              <tr>
+                <td colSpan={5} className="px-6 py-8 text-center text-red-400 text-sm">
+                  {loadError}
                 </td>
               </tr>
             ) : services.length === 0 ? (

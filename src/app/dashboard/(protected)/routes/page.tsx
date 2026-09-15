@@ -5,6 +5,8 @@ import { Plus, Pencil, Trash2, X, ChevronDown } from 'lucide-react'
 import type { Route } from '@/lib/supabase/types'
 import RichTextEditor from '@/components/dashboard/RichTextEditor'
 import { addRoute, updateRoute, deleteRoute, toggleRouteStatus } from '@/lib/actions/routes'
+import { runDashboardAction } from '../_components/report-action-error'
+import { loadList } from '../_components/load-list'
 
 type FaqRow = { q: string; a: string }
 
@@ -33,13 +35,20 @@ export default function RoutesPage() {
   const [faqs, setFaqs] = useState<FaqRow[]>([])
   const [showSeo, setShowSeo] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   async function fetchRoutes() {
     setLoading(true)
-    const res = await fetch('/api/routes')
-    const data = await res.json()
-    setRoutes(data ?? [])
-    setLoading(false)
+    setLoadError(null)
+    try {
+      setRoutes(await loadList<Route>('/api/routes'))
+    } catch (err) {
+      console.error(err)
+      setRoutes([])
+      setLoadError(err instanceof Error ? err.message : 'Could not load routes.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -118,26 +127,23 @@ export default function RoutesPage() {
       )
     )
 
-    if (editingRoute) {
-      await updateRoute(editingRoute.id, formData)
-    } else {
-      await addRoute(formData)
-    }
-
+    const ok = await runDashboardAction(() =>
+      editingRoute ? updateRoute(editingRoute.id, formData) : addRoute(formData)
+    )
     setSaving(false)
+    if (!ok) return
+
     closeModal()
     fetchRoutes()
   }
 
   async function handleDelete(id: string) {
     if (!confirm('Are you sure you want to delete this route?')) return
-    await deleteRoute(id)
-    fetchRoutes()
+    if (await runDashboardAction(() => deleteRoute(id))) fetchRoutes()
   }
 
   async function handleToggleStatus(id: string, isActive: boolean) {
-    await toggleRouteStatus(id, isActive)
-    fetchRoutes()
+    if (await runDashboardAction(() => toggleRouteStatus(id, isActive))) fetchRoutes()
   }
 
   return (
@@ -171,6 +177,12 @@ export default function RoutesPage() {
               <tr>
                 <td colSpan={7} className="px-6 py-8 text-center text-gray-500 text-sm">
                   Loading routes...
+                </td>
+              </tr>
+            ) : loadError ? (
+              <tr>
+                <td colSpan={7} className="px-6 py-8 text-center text-red-400 text-sm">
+                  {loadError}
                 </td>
               </tr>
             ) : routes.length === 0 ? (

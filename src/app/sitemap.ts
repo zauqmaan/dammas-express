@@ -27,15 +27,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     }))
 
+  // lastModified is repeated rather than added by a trailing .map(): the
+  // annotation would then apply to the map's result instead of to this literal,
+  // and without a contextual type TypeScript widens 'weekly' to string, which
+  // no longer satisfies the changeFrequency union.
   const staticRoutes: MetadataRoute.Sitemap = [
-    { url: absoluteUrl('/'), changeFrequency: 'weekly', priority: 1 },
-    { url: absoluteUrl('/services'), changeFrequency: 'monthly', priority: 0.9 },
-    { url: absoluteUrl('/routes'), changeFrequency: 'monthly', priority: 0.9 },
-    { url: absoluteUrl('/booking'), changeFrequency: 'monthly', priority: 0.9 },
-    { url: absoluteUrl('/contact'), changeFrequency: 'monthly', priority: 0.9 },
-    { url: absoluteUrl('/portfolio'), changeFrequency: 'monthly', priority: 0.8 },
-    { url: absoluteUrl('/blog'), changeFrequency: 'weekly', priority: 0.8 },
-  ].map(entry => ({ ...entry, lastModified: now }))
+    { url: absoluteUrl('/'), lastModified: now, changeFrequency: 'weekly', priority: 1 },
+    { url: absoluteUrl('/services'), lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
+    { url: absoluteUrl('/routes'), lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
+    { url: absoluteUrl('/booking'), lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
+    { url: absoluteUrl('/contact'), lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
+    { url: absoluteUrl('/portfolio'), lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    { url: absoluteUrl('/blog'), lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
+  ]
 
   return [...staticRoutes, ...routeDetailRoutes, ...blogRoutes]
 }

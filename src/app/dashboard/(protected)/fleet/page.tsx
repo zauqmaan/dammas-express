@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { Plus, Pencil, Trash2, X } from 'lucide-react'
 import type { FleetVehicle } from '@/lib/supabase/types'
 import { addFleetVehicle, updateFleetVehicle, deleteFleetVehicle, toggleFleetStatus } from '@/lib/actions/fleet'
+import { runDashboardAction } from '../_components/report-action-error'
+import { loadList } from '../_components/load-list'
 
 const emptyForm = {
   name: '',
@@ -24,13 +26,20 @@ export default function FleetPage() {
   const [form, setForm] = useState(emptyForm)
   const [saving, setSaving] = useState(false)
   const [imageFile, setImageFile] = useState<File | null>(null)
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   async function fetchFleet() {
     setLoading(true)
-    const res = await fetch('/api/fleet')
-    const data = await res.json()
-    setVehicles(data ?? [])
-    setLoading(false)
+    setLoadError(null)
+    try {
+      setVehicles(await loadList<FleetVehicle>('/api/fleet'))
+    } catch (err) {
+      console.error(err)
+      setVehicles([])
+      setLoadError(err instanceof Error ? err.message : 'Could not load the fleet.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -84,50 +93,23 @@ export default function FleetPage() {
       formData.set('image', imageFile)
     }
 
-    try {
-      if (editingVehicle) {
-        await updateFleetVehicle(editingVehicle.id, formData)
-      } else {
-        await addFleetVehicle(formData)
-      }
-      closeModal()
-      fetchFleet()
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Something went wrong.'
-      alert(message)
-      if (message.toLowerCase().includes('session')) {
-        window.location.href = '/dashboard/login'
-      }
-    } finally {
-      setSaving(false)
-    }
+    const ok = await runDashboardAction(() =>
+      editingVehicle ? updateFleetVehicle(editingVehicle.id, formData) : addFleetVehicle(formData)
+    )
+    setSaving(false)
+    if (!ok) return
+
+    closeModal()
+    fetchFleet()
   }
 
   async function handleDelete(id: string) {
     if (!confirm('Are you sure you want to delete this vehicle?')) return
-    try {
-      await deleteFleetVehicle(id)
-      fetchFleet()
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Something went wrong.'
-      alert(message)
-      if (message.toLowerCase().includes('session')) {
-        window.location.href = '/dashboard/login'
-      }
-    }
+    if (await runDashboardAction(() => deleteFleetVehicle(id))) fetchFleet()
   }
 
   async function handleToggleStatus(id: string, isActive: boolean) {
-    try {
-      await toggleFleetStatus(id, isActive)
-      fetchFleet()
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Something went wrong.'
-      alert(message)
-      if (message.toLowerCase().includes('session')) {
-        window.location.href = '/dashboard/login'
-      }
-    }
+    if (await runDashboardAction(() => toggleFleetStatus(id, isActive))) fetchFleet()
   }
 
   return (
@@ -160,6 +142,12 @@ export default function FleetPage() {
               <tr>
                 <td colSpan={6} className="px-6 py-8 text-center text-gray-500 text-sm">
                   Loading fleet...
+                </td>
+              </tr>
+            ) : loadError ? (
+              <tr>
+                <td colSpan={6} className="px-6 py-8 text-center text-red-400 text-sm">
+                  {loadError}
                 </td>
               </tr>
             ) : vehicles.length === 0 ? (

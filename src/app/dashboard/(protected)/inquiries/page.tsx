@@ -4,18 +4,27 @@ import { useEffect, useState } from 'react'
 import { Check, Trash2 } from 'lucide-react'
 import type { Inquiry } from '@/lib/supabase/types'
 import { markInquiryRead, deleteInquiry } from '@/lib/actions/inquiries'
+import { runDashboardAction } from '../_components/report-action-error'
+import { loadList } from '../_components/load-list'
 import { formatDate } from '@/lib/format'
 
 export default function InquiriesPage() {
   const [inquiries, setInquiries] = useState<Inquiry[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   async function fetchInquiries() {
     setLoading(true)
-    const res = await fetch('/api/inquiries')
-    const data = await res.json()
-    setInquiries(data ?? [])
-    setLoading(false)
+    setLoadError(null)
+    try {
+      setInquiries(await loadList<Inquiry>('/api/inquiries'))
+    } catch (err) {
+      console.error(err)
+      setInquiries([])
+      setLoadError(err instanceof Error ? err.message : 'Could not load inquiries.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -23,14 +32,12 @@ export default function InquiriesPage() {
   }, [])
 
   async function handleMarkRead(id: string) {
-    await markInquiryRead(id)
-    fetchInquiries()
+    if (await runDashboardAction(() => markInquiryRead(id))) fetchInquiries()
   }
 
   async function handleDelete(id: string) {
     if (!confirm('Are you sure you want to delete this inquiry?')) return
-    await deleteInquiry(id)
-    fetchInquiries()
+    if (await runDashboardAction(() => deleteInquiry(id))) fetchInquiries()
   }
 
   return (
@@ -59,6 +66,12 @@ export default function InquiriesPage() {
               <tr>
                 <td colSpan={9} className="px-6 py-8 text-center text-gray-500 text-sm">
                   Loading inquiries...
+                </td>
+              </tr>
+            ) : loadError ? (
+              <tr>
+                <td colSpan={9} className="px-6 py-8 text-center text-red-400 text-sm">
+                  {loadError}
                 </td>
               </tr>
             ) : inquiries.length === 0 ? (

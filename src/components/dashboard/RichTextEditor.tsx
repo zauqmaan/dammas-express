@@ -31,7 +31,7 @@ import {
 } from 'lucide-react'
 import { tableExtensions } from '@/components/dashboard/extensions/table'
 import { Image, type ImageAlign } from '@/components/dashboard/extensions/image'
-import { uploadImage } from '@/lib/actions/upload'
+import { uploadImageAction } from '@/lib/actions/upload'
 
 // The WhatsApp CTA the "Insert Button" toolbar action drops into the content.
 // Every utility class here is safelisted in tailwind.config.ts so it survives
@@ -506,25 +506,20 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
           continue
         }
 
-        let url: string | null = null
-        try {
-          url = await uploadImage(file)
-        } catch (error) {
-          // Most often an expired dashboard session, which uploadImage reports
-          // by throwing.
-          console.error(error)
-          window.alert(
-            error instanceof Error ? error.message : `Upload failed for "${file.name}".`
-          )
+        const result = await uploadImageAction(file)
+
+        if (!result.ok) {
+          window.alert(`${file.name}: ${result.message}`)
+          // Nothing else in this batch can succeed either, and the editor has
+          // no way to recover a login from here.
+          if (result.sessionExpired) {
+            window.location.href = '/dashboard/login'
+            return
+          }
           continue
         }
 
-        if (!url) {
-          window.alert(`Upload failed for "${file.name}". Please try again.`)
-          continue
-        }
-
-        editor.chain().focus().setImage({ src: url, alt: altFromFileName(file.name) }).run()
+        editor.chain().focus().setImage({ src: result.url, alt: altFromFileName(file.name) }).run()
       }
     } finally {
       setUploading(false)

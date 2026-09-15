@@ -8,8 +8,14 @@
 import { ImageResponse } from "next/og";
 import { BUSINESS, HOURS, OG_IMAGE } from "@/lib/seo";
 
-// Generated once at build and served from the CDN — the card is static.
-export const dynamic = "force-static";
+// The edge runtime is required, not a preference. Under the Node runtime
+// @vercel/og resolves its bundled font and WASM through fileURLToPath, which
+// throws "TypeError: Invalid URL" on Windows paths and fails the build while
+// prerendering this route. The edge bundle inlines those assets instead.
+//
+// ImageResponse already sends a long immutable cache-control in production, so
+// the card is still generated once and then served from the CDN.
+export const runtime = "edge";
 
 export function GET() {
   return new ImageResponse(

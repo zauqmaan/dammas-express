@@ -80,6 +80,29 @@ export function verifySession(token: string): boolean {
   }
 }
 
+/**
+ * Check an `Authorization: Bearer <key>` header against N8N_API_KEY.
+ *
+ * Deliberately separate from the dashboard password and session secret, so the
+ * n8n key can be rotated on its own. Returns 'not_configured' when the env var
+ * is missing or blank so the caller can refuse the request — an unset key must
+ * never leave the endpoint open.
+ */
+export function verifyApiKey(request: Request): 'ok' | 'unauthorized' | 'not_configured' {
+  const configured = process.env.N8N_API_KEY?.trim()
+  if (!configured) return 'not_configured'
+
+  const header = request.headers.get('authorization') ?? ''
+  const match = header.match(/^Bearer\s+(.+)$/i)
+  if (!match) return 'unauthorized'
+
+  // Same hash-then-compare as verifyPassword: equal-length digests for
+  // timingSafeEqual, without leaking the key's length.
+  const given = createHash('sha256').update(match[1].trim()).digest()
+  const expected = createHash('sha256').update(configured).digest()
+  return timingSafeEqual(given, expected) ? 'ok' : 'unauthorized'
+}
+
 // Call at the top of every dashboard Server Action so writes are actually
 // gated on login, not just the page render.
 export async function requireSession(): Promise<void> {

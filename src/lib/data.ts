@@ -52,6 +52,23 @@ export async function getPublishedPosts() {
   return data as BlogPost[] || []
 }
 
+// Metadata-only view of published posts for the n8n content agent. Selects
+// explicit columns so the full HTML content and image_url never leave the
+// database. Throws rather than returning [] on error: an empty list would read
+// to the agent as "nothing published yet".
+export async function getPublishedPostSummaries() {
+  const { data, error } = await supabase
+    .from('blog_posts')
+    .select('id, title, slug, excerpt, category, created_at, updated_at')
+    .eq('is_published', true)
+    .order('created_at', { ascending: false })
+  if (error) throw new Error(`Load published post summaries failed: ${error.message}`)
+  return (data ?? []) as Pick<
+    BlogPost,
+    'id' | 'title' | 'slug' | 'excerpt' | 'category' | 'created_at' | 'updated_at'
+  >[]
+}
+
 export async function getPostBySlug(slug: string) {
   const { data, error } = await supabase
     .from('blog_posts')

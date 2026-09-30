@@ -47,13 +47,17 @@ export default function SidebarNav() {
       </nav>
 
       <div className="mt-auto pt-6 border-t border-white/5">
-        <Link
-          href="/dashboard/logout"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-red-400 hover:text-red-300 hover:bg-white/5"
-        >
-          <LogOut size={18} />
-          Logout
-        </Link>
+        {/* A form POST, not a <Link>: Next.js prefetches links in production,
+            and prefetching the logout route would clear the session cookie. */}
+        <form action="/dashboard/logout" method="post">
+          <button
+            type="submit"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-red-400 hover:text-red-300 hover:bg-white/5"
+          >
+            <LogOut size={18} />
+            Logout
+          </button>
+        </form>
       </div>
     </>
   )

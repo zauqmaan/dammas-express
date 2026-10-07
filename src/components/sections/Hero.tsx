@@ -53,6 +53,9 @@ export default function Hero() {
           aria-hidden="true"
           decoding="async"
           loading={index === 0 ? "eager" : "lazy"}
+          // The first slide is the likely LCP element — start its download
+          // ahead of other resources. The hidden slides stay at default priority.
+          fetchPriority={index === 0 ? "high" : undefined}
           className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out ${
             index === currentSlide ? "opacity-100 scale-100" : "opacity-0 scale-105"
           }`}
@@ -83,7 +86,7 @@ export default function Hero() {
         </span>{" "}
         Al Quoz Car Lift
         <br />
-        Services &amp; Staff Transport Service
+        &amp; Staff Transport Services
       </motion.h1>
 
       {/* Subheadline */}

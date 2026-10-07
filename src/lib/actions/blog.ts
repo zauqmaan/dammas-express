@@ -54,7 +54,15 @@ export async function updatePost(id: string, formData: FormData): Promise<Action
     assertOk(
       await adminSupabase
         .from('blog_posts')
-        .update({ title, slug, excerpt, content, category, image_url })
+        .update({
+          title,
+          slug,
+          excerpt,
+          content,
+          category,
+          image_url,
+          updated_at: new Date().toISOString(),
+        })
         .eq('id', id),
       'Update post'
     )

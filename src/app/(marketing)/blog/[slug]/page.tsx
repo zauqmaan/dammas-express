@@ -4,11 +4,18 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, Calendar, Clock, MessageCircle } from "lucide-react";
 import BlogCard from "@/components/ui/BlogCard";
 import { getPostBySlug, getPublishedPosts, getRelatedPosts, getRoutes } from "@/lib/data";
-import { prepareContentHtml } from "@/lib/content";
+import { prepareContentHtml, readingMinutes } from "@/lib/content";
 import { formatDate } from "@/lib/format";
 import { routesForGuide } from "@/lib/route-links";
 import type { Route } from "@/lib/supabase/types";
-import { pageMetadata } from "@/lib/seo";
+import {
+  absoluteUrl,
+  BUSINESS,
+  BUSINESS_ID,
+  OG_IMAGE,
+  pageMetadata,
+  SITE_URL,
+} from "@/lib/seo";
 
 interface BlogArticlePageProps {
   params: { slug: string };
@@ -56,8 +63,42 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
   // long", the route page is where they book. Inactive routes are skipped.
   const guideRoutes = allRoutes.filter((route) => guideRouteSlugs.includes(route.slug));
 
+  // Built only from stored fields. There is no author column, so the author is
+  // the business itself rather than an invented person; the publisher points at
+  // the site-wide LocalBusiness node by @id instead of repeating it.
+  // datePublished is created_at — the same date shown above the article and in
+  // og:article:published_time. dateModified never precedes it.
+  const pageUrl = absoluteUrl(`/blog/${post.slug}`);
+  const dateModified =
+    new Date(post.updated_at).getTime() > new Date(post.created_at).getTime()
+      ? post.updated_at
+      : post.created_at;
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": `${pageUrl}#article`,
+    headline: post.title,
+    description: post.excerpt,
+    url: pageUrl,
+    mainEntityOfPage: pageUrl,
+    datePublished: post.created_at,
+    dateModified,
+    image: post.image_url || OG_IMAGE.url,
+    author: { "@type": "Organization", name: BUSINESS.name, url: SITE_URL },
+    publisher: { "@id": BUSINESS_ID },
+    articleSection: post.category,
+    inLanguage: "en",
+  };
+
   return (
     <div className="pt-32 pb-20 bg-[#030712]">
+      <script
+        type="application/ld+json"
+        // Escape `<` so no stored string can ever close the script tag early
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+        }}
+      />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <Link
           href="/blog"
@@ -90,7 +131,7 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
           </span>
           <span className="flex items-center gap-1.5">
             <Clock size={14} />
-            5 min read
+            {readingMinutes(post.content)} min read
           </span>
         </div>
 

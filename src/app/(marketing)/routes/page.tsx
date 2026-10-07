@@ -7,7 +7,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata = pageMetadata({
   title: "Car Lift Routes to Al Quoz, Dubai",
   description:
-    "Fixed monthly pricing for car lift routes from Deira, Rigga, Bur Dubai, Karama, and Sharaf DG to Al Quoz.",
+    "Monthly car lift routes to Al Quoz Industrial Areas 1–4 from Deira, Rigga, Abu Hail, Bur Dubai, Karama & Sharaf DG. Fixed prices, Monday to Sunday.",
   path: "/routes",
 });
 

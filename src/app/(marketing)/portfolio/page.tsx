@@ -102,6 +102,8 @@ export default async function PortfolioPage() {
                       <img
                         src={vehicle.image_url}
                         alt={vehicle.name}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover"
                       />
                     ) : (

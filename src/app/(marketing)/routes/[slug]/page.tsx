@@ -331,6 +331,8 @@ export default async function RouteDetailPage({ params }: RouteDetailPageProps) 
                     <img
                       src={vehicle.image_url}
                       alt={`${vehicle.name} ${vehicle.type.toLowerCase()} from the Dammas Express fleet`}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover"
                     />
                   ) : (

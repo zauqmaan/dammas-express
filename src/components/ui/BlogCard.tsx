@@ -15,7 +15,7 @@ export default function BlogCard({ post }: BlogCardProps) {
     >
       <div className="h-48 bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center overflow-hidden">
         {post.image_url ? (
-          <img src={post.image_url} alt={post.title} className="w-full h-full object-cover" />
+          <img src={post.image_url} alt={post.title} loading="lazy" decoding="async" className="w-full h-full object-cover" />
         ) : (
           <span className="text-gray-700 text-sm font-medium">{post.category}</span>
         )}

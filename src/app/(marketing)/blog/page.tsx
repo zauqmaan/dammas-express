@@ -5,7 +5,8 @@ import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "Car Lift & Commuting Blog — Dubai",
-  description: "Tips, guides, and news about transportation services across the UAE.",
+  description:
+    "Commuter guides for getting to Al Quoz from Deira, Bur Dubai, Karama, Rigga, Abu Hail and nearby areas — distances, Metro vs car lift, and staff transport planning.",
   path: "/blog",
 });
 

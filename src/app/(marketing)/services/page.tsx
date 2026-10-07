@@ -6,7 +6,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata = pageMetadata({
   title: "Car Lift & Staff Transport, Al Quoz Dubai",
   description:
-    "Staff pick & drop, tours, and party pick & drop services to Al Quoz, Dubai.",
+    "Monthly car lift and staff transport to Al Quoz Industrial Areas 1–4 from Deira, Bur Dubai, Karama, Rigga and Abu Hail. Morning and evening trips, Monday to Sunday.",
   path: "/services",
 });
 

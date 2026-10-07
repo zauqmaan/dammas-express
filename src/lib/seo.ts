@@ -10,11 +10,13 @@
 import type { Metadata } from "next";
 
 /**
- * Canonical origin, no trailing slash. The apex is canonical — www redirects to
- * it at the hosting layer. Override per-environment with NEXT_PUBLIC_SITE_URL
- * (e.g. a preview deployment) without touching any other file.
+ * Canonical origin, no trailing slash. www is canonical and is the final
+ * production host — the apex (dammasexpress.ae) 308-redirects to it at the
+ * hosting layer (Vercel domain settings). Override per-environment with
+ * NEXT_PUBLIC_SITE_URL (e.g. a preview deployment) without touching any other
+ * file; in production leave it unset or set it to this same value.
  */
-const DEFAULT_SITE_URL = "https://dammasexpress.ae";
+const DEFAULT_SITE_URL = "https://www.dammasexpress.ae";
 
 // A declared-but-empty env var is "", not undefined, so `??` would let a blank
 // value through and produce relative "URLs" everywhere. Check for falsy.

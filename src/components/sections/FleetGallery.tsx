@@ -39,7 +39,7 @@ export default function FleetGallery({ data }: FleetGalleryProps) {
             >
               <div className="relative h-96 object-cover bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center overflow-hidden">
                 {vehicle.image_url ? (
-                  <img src={vehicle.image_url} alt={vehicle.name} className="w-full h-full object-cover" />
+                  <img src={vehicle.image_url} alt={vehicle.name} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                 ) : (
                   <Truck size={64} className="text-gray-700" />
                 )}

@@ -5,7 +5,7 @@ import { ArrowRight, CheckCircle, ChevronRight, MessageCircle, Truck } from "luc
 import { getRouteBySlug, getRoutes, getFleet, getPublishedPosts } from "@/lib/data";
 import { prepareContentHtml } from "@/lib/content";
 import { ROUTE_LINKS } from "@/lib/route-links";
-import type { Route } from "@/lib/supabase/types";
+import type { BlogPost, Route } from "@/lib/supabase/types";
 import { absoluteUrl, BRAND_SUFFIX, BUSINESS_ID, HOURS, pageMetadata } from "@/lib/seo";
 
 interface RouteDetailPageProps {
@@ -89,7 +89,9 @@ export default async function RouteDetailPage({ params }: RouteDetailPageProps) 
   const nearbyRoutes = (links?.nearby ?? [])
     .map((nearbySlug) => allRoutes.find((r) => r.slug === nearbySlug))
     .filter((r): r is Route => Boolean(r));
-  const guide = links?.guide ? posts.find((post) => post.slug === links.guide) : undefined;
+  const guides = (links?.guides ?? [])
+    .map((guideSlug) => posts.find((post) => post.slug === guideSlug))
+    .filter((post): post is BlogPost => Boolean(post));
 
   const quickFacts = [
     {
@@ -387,8 +389,8 @@ export default async function RouteDetailPage({ params }: RouteDetailPageProps) 
           </h2>
 
           <ul className="mt-10 space-y-3">
-            {guide && (
-              <li>
+            {guides.map((guide) => (
+              <li key={guide.slug}>
                 <Link
                   href={`/blog/${guide.slug}`}
                   className="flex items-center justify-between gap-4 bg-[#0F172A] border border-white/5 rounded-xl p-5 hover:border-emerald-500/20 transition-colors"
@@ -402,7 +404,7 @@ export default async function RouteDetailPage({ params }: RouteDetailPageProps) 
                   <ArrowRight size={18} className="text-gray-500 shrink-0" />
                 </Link>
               </li>
-            )}
+            ))}
             <li>
               <Link
                 href="/services"

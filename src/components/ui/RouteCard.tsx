@@ -48,6 +48,12 @@ export default function RouteCard({
         {slug ? (
           <Link href={`/routes/${slug}`} className={primaryCtaClass}>
             View Route Details
+            {/* Gives each card's link a distinct, descriptive anchor without
+                changing the visible label. */}
+            <span className="sr-only">
+              {" "}
+              – {from_location} to {to_location}
+            </span>
           </Link>
         ) : (
           <div className={primaryCtaClass}>View Route Details</div>

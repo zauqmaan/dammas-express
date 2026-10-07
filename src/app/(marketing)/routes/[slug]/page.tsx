@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CheckCircle, MessageCircle, Truck } from "lucide-react";
-import { getRouteBySlug, getRoutes, getFleet } from "@/lib/data";
+import { ArrowRight, CheckCircle, ChevronRight, MessageCircle, Truck } from "lucide-react";
+import { getRouteBySlug, getRoutes, getFleet, getPublishedPosts } from "@/lib/data";
 import { prepareContentHtml } from "@/lib/content";
-import { BRAND_SUFFIX, HOURS, pageMetadata } from "@/lib/seo";
+import { ROUTE_LINKS } from "@/lib/route-links";
+import type { Route } from "@/lib/supabase/types";
+import { absoluteUrl, BRAND_SUFFIX, BUSINESS_ID, HOURS, pageMetadata } from "@/lib/seo";
 
 interface RouteDetailPageProps {
   params: { slug: string };
@@ -13,6 +16,12 @@ function whatsappUrl(from: string) {
   return `https://wa.me/971566625302?text=Hi%2C%20I%20want%20to%20book%20a%20seat%20from%20${encodeURIComponent(
     from
   )}%20to%20Al%20Quoz`;
+}
+
+/** "AED 300/ month" → "300". Null when the stored price has no number in it. */
+function monthlyPriceValue(price: string | null) {
+  const match = price?.match(/\d[\d,]*(?:\.\d+)?/);
+  return match ? match[0].replace(/,/g, "") : null;
 }
 
 function splitZones(value: string | null) {
@@ -63,10 +72,24 @@ export default async function RouteDetailPage({ params }: RouteDetailPageProps) 
     notFound();
   }
 
-  const fleet = (await getFleet()).slice(0, 3);
+  const links = ROUTE_LINKS[route.slug];
+  const [allFleet, allRoutes, posts] = await Promise.all([
+    getFleet(),
+    getRoutes(),
+    getPublishedPosts(),
+  ]);
+  const fleet = allFleet.slice(0, 3);
   const pickupZones = splitZones(route.pickup_zones);
   const dropoffZones = splitZones(route.dropoff_zones);
   const bookingUrl = whatsappUrl(route.from_location);
+  const routeName = `${route.from_location} to Al Quoz`;
+
+  // Only active routes and published posts are linked, so switching one off in
+  // the dashboard can never leave a broken link on another page.
+  const nearbyRoutes = (links?.nearby ?? [])
+    .map((nearbySlug) => allRoutes.find((r) => r.slug === nearbySlug))
+    .filter((r): r is Route => Boolean(r));
+  const guide = links?.guide ? posts.find((post) => post.slug === links.guide) : undefined;
 
   const quickFacts = [
     {
@@ -85,31 +108,106 @@ export default async function RouteDetailPage({ params }: RouteDetailPageProps) 
       note: `Book any time — enquiries answered ${HOURS.contact}`,
     },
     {
-      title: "Premium Assigned Fleet",
+      // Was "Premium Assigned Fleet", which implied specific vehicles are
+      // assigned to each route — the fleet is shared across routes.
+      title: "Vehicles",
       value: "Toyota HiAce & Coaster",
       note: "Air-conditioned 15-seater and 30-seater",
     },
     {
-      title: "Distance & Time",
+      // Was "Distance & Time … via E11 / E44" on every route, which was not
+      // accurate for all of them. The stored duration is a typical estimate.
+      title: "Typical Travel Time",
       value: route.duration,
-      note: "via E11 / E44",
+      note: "Approximate — varies with traffic",
+    },
+  ];
+
+  const priceValue = monthlyPriceValue(route.price_one_way);
+  const pageUrl = absoluteUrl(`/routes/${route.slug}`);
+
+  // Describes only what the page visibly states: the trip, the provider, and
+  // the monthly price shown in the quick facts.
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+        { "@type": "ListItem", position: 2, name: "Routes", item: absoluteUrl("/routes") },
+        { "@type": "ListItem", position: 3, name: routeName, item: pageUrl },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: `${routeName} car lift`,
+      serviceType: "Shared monthly passenger transport (car lift)",
+      url: pageUrl,
+      provider: { "@id": BUSINESS_ID },
+      areaServed: [
+        { "@type": "Place", name: route.from_location },
+        { "@type": "Place", name: "Al Quoz" },
+      ],
+      ...(priceValue
+        ? {
+            offers: {
+              "@type": "Offer",
+              price: priceValue,
+              priceCurrency: "AED",
+              priceSpecification: {
+                "@type": "UnitPriceSpecification",
+                price: priceValue,
+                priceCurrency: "AED",
+                unitText: "MONTH",
+              },
+            },
+          }
+        : {}),
     },
   ];
 
   return (
     <div className="bg-[#030712] pb-24 md:pb-0">
+      <script
+        type="application/ld+json"
+        // Escape `<` so no stored string can ever close the script tag early
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+        }}
+      />
+
       {/* 1. Page hero */}
       <section className="min-h-[50vh] flex items-center relative overflow-hidden bg-gradient-to-b from-[#030712] to-[#0F172A] pt-32 pb-16">
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <nav aria-label="Breadcrumb" className="mb-6">
+            <ol className="flex items-center justify-center flex-wrap gap-2 text-sm">
+              <li>
+                <Link href="/" className="text-gray-500 hover:text-white transition-colors">
+                  Home
+                </Link>
+              </li>
+              <li className="flex items-center gap-2">
+                <ChevronRight size={12} className="text-gray-700" aria-hidden="true" />
+                <Link href="/routes" className="text-gray-500 hover:text-white transition-colors">
+                  Routes
+                </Link>
+              </li>
+              <li aria-current="page" className="flex items-center gap-2 text-emerald-400 font-medium">
+                <ChevronRight size={12} className="text-gray-700" aria-hidden="true" />
+                {routeName}
+              </li>
+            </ol>
+          </nav>
           <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
-            Reliable Daily Car Lift &amp; Transport Service: {route.from_location} to Al
-            Quoz
+            {route.from_location} to Al Quoz Car Lift &amp; Monthly Transport
           </h1>
+          {/* Deliberately short and neutral: the route-specific introduction
+              lives in the editorial content below. This paragraph used to be a
+              long identical sales pitch repeated on every route page. */}
           <p className="text-gray-400 mt-6 text-lg leading-relaxed">
-            Tired of expensive taxi fares and long waiting times for public buses? Dammas
-            Express offers a structured, premium, yet highly affordable monthly pass for
-            professionals commuting daily between {route.from_location} and Al Quoz
-            Industrial Area.
+            Shared monthly transport from {route.from_location} to Al Quoz Industrial
+            Areas 1–4, with fixed morning and evening trips, {HOURS.serviceDays}.
           </p>
           <a
             href={bookingUrl}
@@ -149,40 +247,46 @@ export default async function RouteDetailPage({ params }: RouteDetailPageProps) 
       {(pickupZones.length > 0 || dropoffZones.length > 0) && (
         <section className="py-20 border-t border-white/5">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Each column renders only when it has zones — a route with only
+                drop-offs filled in must not show an empty "Pickup Zones" heading. */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              <div>
-                <h2 className="text-2xl font-bold text-white mb-6">
-                  Pickup Zones in {route.from_location}
-                </h2>
-                <ul className="space-y-3">
-                  {pickupZones.map((zone) => (
-                    <li key={zone} className="flex items-start gap-3">
-                      <CheckCircle
-                        size={18}
-                        className="text-emerald-500 flex-shrink-0 mt-0.5"
-                      />
-                      <span className="text-gray-300">{zone}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {pickupZones.length > 0 && (
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-6">
+                    Pickup Zones in {route.from_location}
+                  </h2>
+                  <ul className="space-y-3">
+                    {pickupZones.map((zone) => (
+                      <li key={zone} className="flex items-start gap-3">
+                        <CheckCircle
+                          size={18}
+                          className="text-emerald-500 flex-shrink-0 mt-0.5"
+                        />
+                        <span className="text-gray-300">{zone}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-              <div>
-                <h2 className="text-2xl font-bold text-white mb-6">
-                  Drop-off Zones in Al Quoz
-                </h2>
-                <ul className="space-y-3">
-                  {dropoffZones.map((zone) => (
-                    <li key={zone} className="flex items-start gap-3">
-                      <CheckCircle
-                        size={18}
-                        className="text-emerald-500 flex-shrink-0 mt-0.5"
-                      />
-                      <span className="text-gray-300">{zone}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {dropoffZones.length > 0 && (
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-6">
+                    Drop-off Zones in Al Quoz
+                  </h2>
+                  <ul className="space-y-3">
+                    {dropoffZones.map((zone) => (
+                      <li key={zone} className="flex items-start gap-3">
+                        <CheckCircle
+                          size={18}
+                          className="text-emerald-500 flex-shrink-0 mt-0.5"
+                        />
+                        <span className="text-gray-300">{zone}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -208,8 +312,10 @@ export default async function RouteDetailPage({ params }: RouteDetailPageProps) 
       {/* 4. Fleet gallery */}
       <section className="py-20 border-t border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Not "for this Route": vehicles are shared across routes, and the
+              page should not imply a specific vehicle runs this trip. */}
           <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight text-center">
-            Our Fleet for this Route
+            Our Fleet
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
@@ -222,7 +328,7 @@ export default async function RouteDetailPage({ params }: RouteDetailPageProps) 
                   {vehicle.image_url ? (
                     <img
                       src={vehicle.image_url}
-                      alt={`${vehicle.name} used for the ${route.from_location} to Al Quoz car lift route`}
+                      alt={`${vehicle.name} ${vehicle.type.toLowerCase()} from the Dammas Express fleet`}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -241,10 +347,8 @@ export default async function RouteDetailPage({ params }: RouteDetailPageProps) 
           </div>
 
           <p className="text-gray-500 text-sm mt-8 max-w-3xl mx-auto text-center">
-            Our fully licensed RTA passenger transport fleet is equipped with
-            high-performance commercial air-conditioning, regularly serviced engines, and
-            professionally trained drivers who know every shortcut between{" "}
-            {route.from_location} and Al Quoz Industrial Area.
+            Trips run in air-conditioned commercial passenger vehicles from our RTA-licensed
+            fleet.
           </p>
         </div>
       </section>
@@ -274,7 +378,85 @@ export default async function RouteDetailPage({ params }: RouteDetailPageProps) 
         </section>
       )}
 
-      {/* 6. Sticky mobile CTA */}
+      {/* 6. Related routes and guides — the route page owns booking intent;
+          the guide covers distance and transport options for the same trip. */}
+      <section className="py-20 border-t border-white/5">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight text-center">
+            Plan Your Commute
+          </h2>
+
+          <ul className="mt-10 space-y-3">
+            {guide && (
+              <li>
+                <Link
+                  href={`/blog/${guide.slug}`}
+                  className="flex items-center justify-between gap-4 bg-[#0F172A] border border-white/5 rounded-xl p-5 hover:border-emerald-500/20 transition-colors"
+                >
+                  <span>
+                    <span className="block text-xs text-emerald-500 font-semibold uppercase tracking-wide">
+                      Travel guide
+                    </span>
+                    <span className="block text-white font-medium mt-1">{guide.title}</span>
+                  </span>
+                  <ArrowRight size={18} className="text-gray-500 shrink-0" />
+                </Link>
+              </li>
+            )}
+            <li>
+              <Link
+                href="/services"
+                className="flex items-center justify-between gap-4 bg-[#0F172A] border border-white/5 rounded-xl p-5 hover:border-emerald-500/20 transition-colors"
+              >
+                <span className="text-white font-medium">
+                  Monthly car lift and staff transport services
+                </span>
+                <ArrowRight size={18} className="text-gray-500 shrink-0" />
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/booking"
+                className="flex items-center justify-between gap-4 bg-[#0F172A] border border-white/5 rounded-xl p-5 hover:border-emerald-500/20 transition-colors"
+              >
+                <span className="text-white font-medium">
+                  Request a seat or a company transport quote
+                </span>
+                <ArrowRight size={18} className="text-gray-500 shrink-0" />
+              </Link>
+            </li>
+          </ul>
+
+          {nearbyRoutes.length > 0 && (
+            <>
+              <h3 className="text-white font-semibold mt-12">Nearby pickup areas</h3>
+              <ul className="mt-4 flex flex-wrap gap-3">
+                {nearbyRoutes.map((nearby) => (
+                  <li key={nearby.slug}>
+                    <Link
+                      href={`/routes/${nearby.slug}`}
+                      className="inline-flex items-center gap-2 bg-[#0F172A] border border-white/5 rounded-lg px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:border-emerald-500/20 transition-colors"
+                    >
+                      {nearby.from_location} to Al Quoz
+                    </Link>
+                  </li>
+                ))}
+                <li>
+                  <Link
+                    href="/routes"
+                    className="inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm text-emerald-400 hover:text-emerald-300 transition-colors"
+                  >
+                    All routes and prices
+                    <ArrowRight size={14} />
+                  </Link>
+                </li>
+              </ul>
+            </>
+          )}
+        </div>
+      </section>
+
+      {/* 7. Sticky mobile CTA */}
       <div className="fixed bottom-0 left-0 right-0 bg-[#0F172A]/95 backdrop-blur-lg border-t border-white/5 p-4 z-50 md:hidden">
         <div className="flex justify-between items-center">
           <span className="text-white font-semibold text-sm">Commute Stress-Free</span>

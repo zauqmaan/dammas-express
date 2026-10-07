@@ -3,9 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, Calendar, Clock, MessageCircle } from "lucide-react";
 import BlogCard from "@/components/ui/BlogCard";
-import { getPostBySlug, getPublishedPosts, getRelatedPosts } from "@/lib/data";
+import { getPostBySlug, getPublishedPosts, getRelatedPosts, getRoutes } from "@/lib/data";
 import { prepareContentHtml } from "@/lib/content";
 import { formatDate } from "@/lib/format";
+import { routesForGuide } from "@/lib/route-links";
+import type { Route } from "@/lib/supabase/types";
 import { pageMetadata } from "@/lib/seo";
 
 interface BlogArticlePageProps {
@@ -44,7 +46,15 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
     notFound();
   }
 
-  const relatedPosts = await getRelatedPosts(post.slug, post.category);
+  const guideRouteSlugs = routesForGuide(post.slug);
+  const [relatedPosts, allRoutes] = await Promise.all([
+    getRelatedPosts(post.slug, post.category),
+    guideRouteSlugs.length > 0 ? getRoutes() : Promise.resolve([] as Route[]),
+  ]);
+  // When this post is the travel guide for one or more routes, the closing CTA
+  // points readers to those route pages — the guide answers "how far / how
+  // long", the route page is where they book. Inactive routes are skipped.
+  const guideRoutes = allRoutes.filter((route) => guideRouteSlugs.includes(route.slug));
 
   return (
     <div className="pt-32 pb-20 bg-[#030712]">
@@ -101,6 +111,21 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
           <p className="text-gray-400 mt-2">
             Book your transportation service today.
           </p>
+          {guideRoutes.length > 0 && (
+            <ul className="mt-6 flex flex-wrap justify-center gap-3">
+              {guideRoutes.map((route) => (
+                <li key={route.slug}>
+                  <Link
+                    href={`/routes/${route.slug}`}
+                    className="inline-flex items-center gap-2 border border-emerald-500/30 hover:border-emerald-500/60 text-emerald-400 hover:text-emerald-300 px-5 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                  >
+                    {route.from_location} to Al Quoz car lift: prices &amp; pickup points
+                    <ArrowRight size={16} />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
           <a
             href={WHATSAPP_URL}
             target="_blank"

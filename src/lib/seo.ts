@@ -51,7 +51,7 @@ export const BUSINESS = {
  * all seven days. They mean different things:
  *
  *  - `contact`  — when someone can reach us to ask or book. Always.
- *  - `service`  — when the vehicles actually run. Weekdays, two fixed windows.
+ *  - `service`  — when the vehicles actually run. Every day, two fixed windows.
  *
  * Every hours string on the site comes from here. If the schedule changes,
  * change it once in this block.
@@ -61,12 +61,12 @@ export const HOURS = {
   contact: "24/7, all days",
   contactShort: "24/7",
   /** Days the vehicles run. */
-  serviceDays: "Monday to Friday",
-  serviceDaysShort: "Mon–Fri",
+  serviceDays: "Monday to Sunday",
+  serviceDaysShort: "Mon–Sun",
   morning: "7:00 AM – 10:00 AM",
   evening: "5:00 PM – 8:00 PM",
   /** One-line summary for tight spots like the footer and trust bars. */
-  serviceSummary: "Rides Mon–Fri · 7–10 AM & 5–8 PM",
+  serviceSummary: "Rides Mon–Sun · 7–10 AM & 5–8 PM",
 } as const;
 
 /** Days the vehicles run, for the JSON-LD openingHoursSpecification. */
@@ -76,6 +76,8 @@ export const SERVICE_DAYS = [
   "Wednesday",
   "Thursday",
   "Friday",
+  "Saturday",
+  "Sunday",
 ] as const;
 
 /** 24-hour times matching HOURS.morning / HOURS.evening, for structured data. */
@@ -95,12 +97,15 @@ export const SOCIAL_PROOF = {
   vehicles: { value: "5", suffix: "+", label: "Fleet Vehicles" },
 } as const;
 
+/** JSON-LD @id of the LocalBusiness node rendered site-wide by JsonLd.tsx. */
+export const BUSINESS_ID = `${SITE_URL}/#business`;
+
 export const BRAND_SUFFIX = ` | ${BUSINESS.name}`;
 
 export const HOME_TITLE = `Al Quoz Car Lift & Staff Transport, Dubai${BRAND_SUFFIX}`;
 
 export const HOME_DESCRIPTION =
-  "Affordable car lift to Al Quoz from Deira, Bur Dubai, Karama, Rigga & Abuhail. Monthly passes AED 250-300. Morning & evening shifts, Monday to Friday.";
+  "Affordable car lift to Al Quoz from Deira, Bur Dubai, Karama, Rigga & Abuhail. Monthly passes AED 250-300. Morning & evening shifts, Monday to Sunday.";
 
 /**
  * Open Graph image. Served by the route handler at src/app/og/route.tsx, which

@@ -1,7 +1,7 @@
 import { Truck, CheckCircle2 } from "lucide-react";
 import PageHero from "@/components/sections/PageHero";
 import { getFleet } from "@/lib/data";
-import { pageMetadata, SOCIAL_PROOF } from "@/lib/seo";
+import { HOURS, pageMetadata, SOCIAL_PROOF } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "Our Fleet — Car Lift Vans, Al Quoz Dubai",
@@ -15,7 +15,7 @@ const TRUST_BAR = [
     value: `${SOCIAL_PROOF.vehicles.value}${SOCIAL_PROOF.vehicles.suffix} Vehicles`,
     label: "Growing fleet across the UAE",
   },
-  { value: "24/7 Booking", label: "Rides run Monday to Friday" },
+  { value: "24/7 Booking", label: `Rides run ${HOURS.serviceDays}` },
   { value: "100% Insured", label: "Every vehicle, every trip" },
   { value: "RTA Licensed", label: "Fully compliant in Dubai" },
 ];

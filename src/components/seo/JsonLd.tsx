@@ -10,6 +10,7 @@
 
 import {
   BUSINESS,
+  BUSINESS_ID,
   HOME_DESCRIPTION,
   SERVICE_DAYS,
   SERVICE_WINDOWS,
@@ -29,6 +30,9 @@ const ALL_DAYS = [
 const schema = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
+  // Stable node id so page-level schema (e.g. the Service on each route page)
+  // can name this business as its provider instead of repeating it.
+  "@id": BUSINESS_ID,
   name: BUSINESS.name,
   alternateName: BUSINESS.legalName,
   description: HOME_DESCRIPTION,
@@ -61,9 +65,9 @@ const schema = {
     { "@type": "Place", name: "Al Karama" },
     { "@type": "Place", name: "Burjuman" },
   ],
-  // When the vehicles actually run: two fixed windows, weekdays only. This is
+  // When the vehicles actually run: two fixed windows, every day. This is
   // deliberately narrower than the contact point below — enquiries are answered
-  // any time, but no route operates at the weekend.
+  // around the clock, but routes only run inside the two shift windows.
   openingHoursSpecification: [
     {
       "@type": "OpeningHoursSpecification",

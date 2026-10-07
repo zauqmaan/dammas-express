@@ -31,7 +31,7 @@ const iconMap: Record<string, LucideIcon> = {
 
 const TRUST_PILLS = [
   "Professional RTA-Licensed Drivers",
-  // Was "Flexible Scheduling", which contradicted the fixed weekday shift
+  // Was "Flexible Scheduling", which contradicted the fixed daily shift
   // windows stated everywhere else on the site.
   `Fixed Shifts, ${HOURS.serviceDaysShort}`,
   "Corporate Solutions Available",

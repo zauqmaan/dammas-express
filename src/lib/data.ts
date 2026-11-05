@@ -1,14 +1,25 @@
 import { supabase } from './supabase/client'
 import type { Service, Route, FleetVehicle, BlogPost } from './supabase/types'
 
+// The public read functions below THROW on a database error instead of
+// returning [] or null. Public pages are ISR-rendered: a render that throws is
+// discarded and the last good page keeps being served, whereas a render that
+// "succeeds" with empty data gets cached — a brief Supabase outage used to be
+// able to cache route pages as 404s, empty route lists, and a sitemap missing
+// every route and blog URL.
+
+// PostgREST's code for `.single()` matching no rows — a genuine "not found",
+// not a failure.
+const NO_ROWS = 'PGRST116'
+
 export async function getServices() {
   const { data, error } = await supabase
     .from('services')
     .select('*')
     .eq('is_active', true)
     .order('sort_order', { ascending: true })
-  if (error) console.error(error)
-  return data as Service[] || []
+  if (error) throw new Error(`Load services failed: ${error.message}`)
+  return (data ?? []) as Service[]
 }
 
 export async function getRoutes() {
@@ -17,10 +28,11 @@ export async function getRoutes() {
     .select('*')
     .eq('is_active', true)
     .order('sort_order', { ascending: true })
-  if (error) console.error(error)
-  return data as Route[] || []
+  if (error) throw new Error(`Load routes failed: ${error.message}`)
+  return (data ?? []) as Route[]
 }
 
+/** Null when no active route has this slug; throws on a database error. */
 export async function getRouteBySlug(slug: string) {
   const { data, error } = await supabase
     .from('routes')
@@ -28,8 +40,11 @@ export async function getRouteBySlug(slug: string) {
     .eq('slug', slug)
     .eq('is_active', true)
     .single()
-  if (error) console.error(error)
-  return data as Route || null
+  if (error) {
+    if (error.code === NO_ROWS) return null
+    throw new Error(`Load route "${slug}" failed: ${error.message}`)
+  }
+  return data as Route
 }
 
 export async function getFleet() {
@@ -38,8 +53,8 @@ export async function getFleet() {
     .select('*')
     .eq('is_active', true)
     .order('sort_order', { ascending: true })
-  if (error) console.error(error)
-  return data as FleetVehicle[] || []
+  if (error) throw new Error(`Load fleet failed: ${error.message}`)
+  return (data ?? []) as FleetVehicle[]
 }
 
 export async function getPublishedPosts() {
@@ -48,8 +63,8 @@ export async function getPublishedPosts() {
     .select('*')
     .eq('is_published', true)
     .order('created_at', { ascending: false })
-  if (error) console.error(error)
-  return data as BlogPost[] || []
+  if (error) throw new Error(`Load published posts failed: ${error.message}`)
+  return (data ?? []) as BlogPost[]
 }
 
 // Metadata-only view of published posts for the n8n content agent. Selects
@@ -69,6 +84,7 @@ export async function getPublishedPostSummaries() {
   >[]
 }
 
+/** Null when no published post has this slug; throws on a database error. */
 export async function getPostBySlug(slug: string) {
   const { data, error } = await supabase
     .from('blog_posts')
@@ -76,8 +92,11 @@ export async function getPostBySlug(slug: string) {
     .eq('slug', slug)
     .eq('is_published', true)
     .single()
-  if (error) console.error(error)
-  return data as BlogPost || null
+  if (error) {
+    if (error.code === NO_ROWS) return null
+    throw new Error(`Load post "${slug}" failed: ${error.message}`)
+  }
+  return data as BlogPost
 }
 
 export async function getRelatedPosts(slug: string, category: string, limit = 3) {

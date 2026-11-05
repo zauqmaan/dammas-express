@@ -37,22 +37,19 @@ export const metadata: Metadata = {
     "al quoz staff transport",
     "dammas express",
   ],
-  // The homepage's own canonical. Every other public route sets its own via
-  // pageMetadata() in src/lib/seo.ts.
-  alternates: { canonical: "/" },
+  // Only site-wide defaults belong here. No canonical, og:url or page-specific
+  // OG/Twitter title: every segment inherits this object, so a homepage
+  // canonical declared here was silently applied to any page that did not set
+  // its own (the dashboard login and 404 pages did exactly that). The homepage
+  // declares its canonical in (marketing)/page.tsx; every other public page
+  // declares its own via pageMetadata() in src/lib/seo.ts.
   openGraph: {
-    type: "website",
-    url: SITE_URL,
     siteName: BUSINESS.name,
     locale: "en_AE",
-    title: HOME_TITLE,
-    description: HOME_DESCRIPTION,
     images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
-    title: HOME_TITLE,
-    description: HOME_DESCRIPTION,
     images: [OG_IMAGE],
   },
 };

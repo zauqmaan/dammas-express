@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowRight, Calendar, Clock, MessageCircle } from "lucide-react";
+import { ArrowRight, Calendar, ChevronRight, Clock, MessageCircle } from "lucide-react";
 import BlogCard from "@/components/ui/BlogCard";
 import { getPostBySlug, getPublishedPosts, getRelatedPosts, getRoutes } from "@/lib/data";
 import { prepareContentHtml, readingMinutes } from "@/lib/content";
@@ -64,31 +64,48 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
   const guideRoutes = allRoutes.filter((route) => guideRouteSlugs.includes(route.slug));
 
   // Built only from stored fields. There is no author column, so the author is
-  // the business itself rather than an invented person; the publisher points at
-  // the site-wide LocalBusiness node by @id instead of repeating it.
-  // datePublished is created_at — the same date shown above the article and in
+  // the business itself rather than an invented person. Author and publisher
+  // both point at the site-wide LocalBusiness node by @id, so they resolve to
+  // one entity; the author repeats name and url for consumers that do not
+  // follow references. datePublished is created_at — the same date shown above the article and in
   // og:article:published_time. dateModified never precedes it.
   const pageUrl = absoluteUrl(`/blog/${post.slug}`);
   const dateModified =
     new Date(post.updated_at).getTime() > new Date(post.created_at).getTime()
       ? post.updated_at
       : post.created_at;
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "@id": `${pageUrl}#article`,
-    headline: post.title,
-    description: post.excerpt,
-    url: pageUrl,
-    mainEntityOfPage: pageUrl,
-    datePublished: post.created_at,
-    dateModified,
-    image: post.image_url || OG_IMAGE.url,
-    author: { "@type": "Organization", name: BUSINESS.name, url: SITE_URL },
-    publisher: { "@id": BUSINESS_ID },
-    articleSection: post.category,
-    inLanguage: "en",
-  };
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+        { "@type": "ListItem", position: 2, name: "Blog", item: absoluteUrl("/blog") },
+        { "@type": "ListItem", position: 3, name: post.title, item: pageUrl },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "@id": `${pageUrl}#article`,
+      headline: post.title,
+      description: post.excerpt,
+      url: pageUrl,
+      mainEntityOfPage: pageUrl,
+      datePublished: post.created_at,
+      dateModified,
+      image: post.image_url || OG_IMAGE.url,
+      author: {
+        "@type": "LocalBusiness",
+        "@id": BUSINESS_ID,
+        name: BUSINESS.name,
+        url: SITE_URL,
+      },
+      publisher: { "@id": BUSINESS_ID },
+      articleSection: post.category,
+      inLanguage: "en",
+    },
+  ];
 
   return (
     <div className="pt-32 pb-20 bg-[#030712]">
@@ -100,19 +117,36 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
         }}
       />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <Link
-          href="/blog"
-          className="inline-flex items-center gap-2 text-gray-500 hover:text-white text-sm transition-colors mb-8"
-        >
-          <ArrowLeft size={16} />
-          Back to Blog
-        </Link>
+        {/* Same pattern as the route pages; it replaces the old "Back to Blog"
+            link, which the Blog crumb still covers. */}
+        <nav aria-label="Breadcrumb" className="mb-8">
+          <ol className="flex items-center flex-wrap gap-2 text-sm">
+            <li>
+              <Link href="/" className="text-gray-500 hover:text-white transition-colors">
+                Home
+              </Link>
+            </li>
+            <li className="flex items-center gap-2">
+              <ChevronRight size={12} className="text-gray-700" aria-hidden="true" />
+              <Link href="/blog" className="text-gray-500 hover:text-white transition-colors">
+                Blog
+              </Link>
+            </li>
+            <li aria-current="page" className="flex items-center gap-2 text-emerald-400 font-medium">
+              <ChevronRight size={12} className="text-gray-700" aria-hidden="true" />
+              {post.title}
+            </li>
+          </ol>
+        </nav>
 
         {post.image_url && (
           <div className="mt-2 mb-8">
+            {/* The cover sits above the headline, so when present it is the
+                likely LCP element — fetch it ahead of other resources. */}
             <img
               src={post.image_url}
               alt={post.title}
+              fetchPriority="high"
               className="w-full h-64 md:h-96 object-cover rounded-xl border border-white/5"
             />
           </div>

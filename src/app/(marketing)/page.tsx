@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Hero from "@/components/sections/Hero";
 import RouteMarquee from "@/components/sections/RouteMarquee";
@@ -10,6 +11,16 @@ import BlogPreview from "@/components/sections/BlogPreview";
 import CTABanner from "@/components/sections/CTABanner";
 import Contact from "@/components/sections/Contact";
 import { getServices, getRoutes, getFleet, getPublishedPosts } from "@/lib/data";
+import { HOME_DESCRIPTION, HOME_TITLE, pageMetadata } from "@/lib/seo";
+
+// The homepage's canonical, og:url and OG/Twitter text live here rather than in
+// the root layout, so no other page can inherit them by accident.
+export const metadata: Metadata = {
+  ...pageMetadata({ title: HOME_TITLE, description: HOME_DESCRIPTION, path: "/" }),
+  // HOME_TITLE already ends with the brand — `absolute` skips the root layout's
+  // "%s | Dammas Express" template so it is not appended a second time.
+  title: { absolute: HOME_TITLE },
+};
 
 export default async function Home() {
   // Independent queries — run them together rather than in series, which cost

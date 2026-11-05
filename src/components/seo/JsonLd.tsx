@@ -17,16 +17,6 @@ import {
   SITE_URL,
 } from "@/lib/seo";
 
-const ALL_DAYS = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-];
-
 const schema = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
@@ -95,7 +85,8 @@ const schema = {
     availableLanguage: ["en", "ar", "ur", "hi"],
     hoursAvailable: {
       "@type": "OpeningHoursSpecification",
-      dayOfWeek: ALL_DAYS,
+      // Every day of the week — the same seven days the vehicles run.
+      dayOfWeek: [...SERVICE_DAYS],
       opens: "00:00",
       closes: "23:59",
     },

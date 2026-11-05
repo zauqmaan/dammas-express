@@ -1,6 +1,7 @@
-import { Car, CalendarRange, Plane, Building2, Truck, CheckCircle2, type LucideIcon } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Car, CalendarRange, Plane, Building2, Truck, CheckCircle2, type LucideIcon } from "lucide-react";
 import PageHero from "@/components/sections/PageHero";
-import { getServices } from "@/lib/data";
+import { getRoutes, getServices } from "@/lib/data";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -24,7 +25,7 @@ function bookingUrl(serviceName: string) {
 }
 
 export default async function ServicesPage() {
-  const services = await getServices();
+  const [services, routes] = await Promise.all([getServices(), getRoutes()]);
 
   return (
     <>
@@ -87,6 +88,44 @@ export default async function ServicesPage() {
           })}
         </div>
       </section>
+
+      {/* Links the services hub to each route page — the pages where pickup
+          points and prices live. getRoutes() returns active routes only, so a
+          route switched off in the dashboard is never linked. */}
+      {routes.length > 0 && (
+        <section className="py-16 border-t border-white/5 bg-[#030712]">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="text-2xl font-bold text-white">Pickup Areas We Serve</h2>
+            <p className="text-gray-400 mt-3">
+              Each route has its own page with pickup points, timings and the
+              monthly price.
+            </p>
+            <ul className="mt-8 flex flex-wrap justify-center gap-3">
+              {routes
+                .filter((route) => route.slug)
+                .map((route) => (
+                  <li key={route.slug}>
+                    <Link
+                      href={`/routes/${route.slug}`}
+                      className="inline-flex items-center gap-2 bg-[#0F172A] border border-white/5 rounded-lg px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:border-emerald-500/20 transition-colors"
+                    >
+                      {route.from_location} to Al Quoz
+                    </Link>
+                  </li>
+                ))}
+              <li>
+                <Link
+                  href="/routes"
+                  className="inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm text-emerald-400 hover:text-emerald-300 transition-colors"
+                >
+                  All routes and prices
+                  <ArrowRight size={14} />
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </section>
+      )}
     </>
   );
 }
